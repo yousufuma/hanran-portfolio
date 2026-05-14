@@ -1,0 +1,699 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { works } from '../data/works';
+---
+
+<Layout>
+	<main class="works-shell">
+		<header class="works-header">
+			<a class="home-link" href="/">← home</a>
+			<div class="page-title">
+				<p>selected works</p>
+				<h1>Work Archive</h1>
+			</div>
+		</header>
+
+		<nav class="work-selector" aria-label="Work selector">
+			{
+				works.map((work, index) => (
+					<button
+						type="button"
+						class:list={['work-selector-button', index === 0 && 'is-active']}
+						data-work-button={work.slug}
+						aria-selected={index === 0 ? 'true' : 'false'}
+					>
+						<span>{String(index + 1).padStart(2, '0')}</span>
+						<b>{work.title}</b>
+						<small>{work.year}</small>
+					</button>
+				))
+			}
+		</nav>
+
+		<section class="work-stage" aria-live="polite">
+			{
+				works.map((work, index) => (
+					<article
+						class:list={['work-panel', index === 0 && 'is-active']}
+						data-work-panel={work.slug}
+						hidden={index !== 0}
+					>
+						<div class="media-column">
+							{
+								work.video && (
+									<div class:list={['video-frame', work.video.orientation === 'portrait' && 'is-portrait']}>
+										<iframe
+											src={work.video.embedUrl}
+											title={work.video.title}
+											frameborder="0"
+											loading="lazy"
+											allow={
+												work.video.provider === 'vimeo'
+													? 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share'
+													: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+											}
+											referrerpolicy="strict-origin-when-cross-origin"
+											allowfullscreen
+										/>
+									</div>
+								)
+							}
+
+							{
+								work.galleryMode === 'carousel' ? (
+									<div class="image-carousel" data-carousel aria-label={`${work.title} image gallery`}>
+										<div class="carousel-viewport">
+											<div class="carousel-track" data-carousel-track>
+												{work.images.map((image, imageIndex) => (
+													<button
+														type="button"
+														class="carousel-slide"
+														data-lightbox-src={image.src}
+														data-lightbox-alt={image.alt}
+														data-carousel-slide
+														aria-label={`Open image ${imageIndex + 1} for ${work.title}`}
+													>
+														<img src={image.src} alt={image.alt} loading="lazy" />
+													</button>
+												))}
+											</div>
+										</div>
+										<div class="carousel-controls">
+											<button type="button" data-carousel-prev>←</button>
+											<span data-carousel-count>01 / {String(work.images.length).padStart(2, '0')}</span>
+											<button type="button" data-carousel-next>→</button>
+										</div>
+									</div>
+								) : (
+									<div class="gallery-grid" aria-label={`${work.title} image gallery`}>
+										{work.images.map((image, imageIndex) => (
+											<button
+												type="button"
+												class="gallery-item"
+												data-lightbox-src={image.src}
+												data-lightbox-alt={image.alt}
+											>
+												<img src={image.src} alt={image.alt} loading="lazy" />
+												<span>{String(imageIndex + 1).padStart(2, '0')}</span>
+												<small>{image.caption}</small>
+											</button>
+										))}
+									</div>
+								)
+							}
+						</div>
+
+						<div class="text-column">
+							<div class="work-heading">
+								<p>{work.year}</p>
+								<h2>{work.title}</h2>
+							</div>
+
+							<dl class="work-data">
+								<div>
+									<dt>medium</dt>
+									<dd>{work.medium}</dd>
+								</div>
+								<div>
+									<dt>tools</dt>
+									<dd>{work.tools.join(', ')}</dd>
+								</div>
+								<div>
+									<dt>keywords</dt>
+									<dd>{work.keywords.join(', ')}</dd>
+								</div>
+							</dl>
+
+							<section class="work-copy" aria-label={`${work.title} description`}>
+								<div>
+									<h3>short description</h3>
+									<p>{work.description}</p>
+								</div>
+								<div>
+									<h3>research relevance</h3>
+									<p>{work.researchRelevance}</p>
+								</div>
+							</section>
+						</div>
+					</article>
+				))
+			}
+		</section>
+
+		<div class="lightbox" data-lightbox hidden>
+			<button type="button" class="lightbox-close" data-lightbox-close>close</button>
+			<img data-lightbox-image alt="" />
+		</div>
+	</main>
+</Layout>
+
+<script>
+	const workButtons = document.querySelectorAll('[data-work-button]');
+	const workPanels = document.querySelectorAll('[data-work-panel]');
+
+	for (const button of workButtons) {
+		button.addEventListener('click', () => {
+			const target = button.getAttribute('data-work-button');
+
+			for (const item of workButtons) {
+				const isActive = item.getAttribute('data-work-button') === target;
+				item.classList.toggle('is-active', isActive);
+				item.setAttribute('aria-selected', String(isActive));
+			}
+
+			for (const panel of workPanels) {
+				const isActive = panel.getAttribute('data-work-panel') === target;
+				panel.classList.toggle('is-active', isActive);
+				panel.toggleAttribute('hidden', !isActive);
+			}
+		});
+	}
+
+	const carousels = document.querySelectorAll('[data-carousel]');
+
+	for (const carousel of carousels) {
+		const track = carousel.querySelector('[data-carousel-track]');
+		const slides = carousel.querySelectorAll('[data-carousel-slide]');
+		const previousButton = carousel.querySelector('[data-carousel-prev]');
+		const nextButton = carousel.querySelector('[data-carousel-next]');
+		const count = carousel.querySelector('[data-carousel-count]');
+		let activeIndex = 0;
+
+		const updateCarousel = () => {
+			if (!(track instanceof HTMLElement) || !(count instanceof HTMLElement)) return;
+			track.style.transform = `translateX(-${activeIndex * 100}%)`;
+			count.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+		};
+
+		previousButton?.addEventListener('click', () => {
+			activeIndex = (activeIndex - 1 + slides.length) % slides.length;
+			updateCarousel();
+		});
+
+		nextButton?.addEventListener('click', () => {
+			activeIndex = (activeIndex + 1) % slides.length;
+			updateCarousel();
+		});
+	}
+
+	const lightbox = document.querySelector('[data-lightbox]');
+	const lightboxImage = document.querySelector('[data-lightbox-image]');
+	const lightboxClose = document.querySelector('[data-lightbox-close]');
+	const galleryButtons = document.querySelectorAll('[data-lightbox-src]');
+
+	const closeLightbox = () => {
+		if (!(lightbox instanceof HTMLElement) || !(lightboxImage instanceof HTMLImageElement)) return;
+		lightbox.hidden = true;
+		lightboxImage.removeAttribute('src');
+		document.body.style.overflow = '';
+	};
+
+	for (const button of galleryButtons) {
+		button.addEventListener('click', () => {
+			if (!(lightbox instanceof HTMLElement) || !(lightboxImage instanceof HTMLImageElement)) return;
+			const src = button.getAttribute('data-lightbox-src');
+			const alt = button.getAttribute('data-lightbox-alt') ?? '';
+			if (!src) return;
+
+			lightboxImage.src = src;
+			lightboxImage.alt = alt;
+			lightbox.hidden = false;
+			document.body.style.overflow = 'hidden';
+		});
+	}
+
+	lightboxClose?.addEventListener('click', closeLightbox);
+	lightbox?.addEventListener('click', (event) => {
+		if (event.target === lightbox) closeLightbox();
+	});
+
+	document.addEventListener('keydown', (event) => {
+		if (event.key === 'Escape') closeLightbox();
+	});
+</script>
+
+<style>
+	:global(body) {
+		background: #f5f1e8;
+	}
+
+	.works-shell {
+		--paper-local: #f5f1e8;
+		--ink-local: #10100d;
+		--muted-local: #5f5a51;
+		--line-local: #10100d;
+		--link-local: #143d31;
+		width: min(1180px, calc(100% - 32px));
+		min-height: 100vh;
+		margin: 0 auto;
+		padding: 34px 0 72px;
+		color: var(--ink-local);
+	}
+
+	.works-header {
+		display: grid;
+		grid-template-columns: 86px minmax(0, 1fr);
+		column-gap: 28px;
+		align-items: start;
+		padding: 18px 0 24px;
+		border-top: 2px solid var(--line-local);
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.home-link,
+	.page-title p,
+	.work-selector-button,
+	.gallery-item span,
+	.gallery-item small,
+	.carousel-controls,
+	dt,
+	.work-heading p,
+	.work-copy h3 {
+		font-family: "SFMono-Regular", "Roboto Mono", "Liberation Mono", Consolas, monospace;
+		font-size: 10px;
+		line-height: 1.35;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.home-link {
+		color: var(--link-local);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 4px;
+	}
+
+	.home-link:hover,
+	.home-link:focus-visible {
+		color: var(--ink-local);
+		outline: none;
+	}
+
+	p,
+	h1,
+	h2,
+	h3,
+	dl,
+	dd {
+		margin: 0;
+	}
+
+	.page-title {
+		display: grid;
+		gap: 12px;
+	}
+
+	.page-title p {
+		color: var(--muted-local);
+	}
+
+	.page-title h1 {
+		font-size: clamp(24px, 3.4vw, 42px);
+		font-weight: 400;
+		line-height: 1.08;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.work-selector {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.work-selector-button {
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		align-content: start;
+		gap: 12px;
+		min-height: 126px;
+		padding: 14px 16px 15px;
+		border: 0;
+		border-right: 1px solid var(--line-local);
+		border-bottom: 2px solid transparent;
+		background: transparent;
+		color: var(--link-local);
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.work-selector-button:last-child {
+		border-right: 0;
+	}
+
+	.work-selector-button b {
+		max-width: 24ch;
+		font: inherit;
+		line-height: 1.45;
+	}
+
+	.work-selector-button small,
+	.work-selector-button span {
+		color: var(--muted-local);
+		font: inherit;
+	}
+
+	.work-selector-button:hover,
+	.work-selector-button:focus-visible {
+		color: var(--ink-local);
+		outline: none;
+	}
+
+	.work-selector-button.is-active {
+		border-bottom-color: var(--line-local);
+		color: var(--ink-local);
+	}
+
+	.work-stage {
+		padding-top: 34px;
+	}
+
+	.work-panel {
+		display: grid;
+		grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+		gap: 34px;
+	}
+
+	.work-panel[hidden] {
+		display: none;
+	}
+
+	.media-column,
+	.text-column {
+		min-width: 0;
+	}
+
+	.gallery-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+		gap: 8px;
+		padding-bottom: 22px;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.gallery-item {
+		display: grid;
+		gap: 8px;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--muted-local);
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.gallery-item img {
+		display: block;
+		box-sizing: border-box;
+		width: 100%;
+		height: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		border: 1px solid var(--line-local);
+		background: var(--paper-local);
+		transition: transform 160ms ease;
+	}
+
+	.gallery-item small {
+		color: var(--muted-local);
+	}
+
+	.gallery-item:hover img,
+	.gallery-item:focus-visible img {
+		transform: scale(1.03);
+	}
+
+	.gallery-item:focus-visible {
+		outline: none;
+	}
+
+	.image-carousel {
+		padding-bottom: 22px;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.carousel-viewport {
+		overflow: hidden;
+		border: 1px solid var(--line-local);
+		background: var(--paper-local);
+	}
+
+	.carousel-track {
+		display: flex;
+		transform: translateX(0);
+		transition: transform 240ms ease;
+	}
+
+	.carousel-slide {
+		display: grid;
+		flex: 0 0 100%;
+		gap: 8px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--muted-local);
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.carousel-slide img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: contain;
+		background: var(--paper-local);
+	}
+
+	.carousel-slide:hover img,
+	.carousel-slide:focus-visible img {
+		filter: contrast(1.04);
+	}
+
+	.carousel-slide:focus-visible {
+		outline: 0;
+	}
+
+	.carousel-controls {
+		display: grid;
+		grid-template-columns: 44px minmax(0, 1fr) 44px;
+		align-items: center;
+		margin-top: 10px;
+		border-top: 1px solid var(--line-local);
+		border-bottom: 1px solid var(--line-local);
+		color: var(--muted-local);
+	}
+
+	.carousel-controls button {
+		min-height: 34px;
+		border: 0;
+		background: transparent;
+		color: var(--link-local);
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.carousel-controls button:first-child {
+		border-right: 1px solid var(--line-local);
+	}
+
+	.carousel-controls button:last-child {
+		border-left: 1px solid var(--line-local);
+	}
+
+	.carousel-controls span {
+		text-align: center;
+	}
+
+	.carousel-controls button:hover,
+	.carousel-controls button:focus-visible {
+		color: var(--ink-local);
+		outline: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.carousel-track {
+			transition: none;
+		}
+	}
+
+	.video-frame {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		margin-bottom: 22px;
+		overflow: hidden;
+		background: var(--paper-local);
+	}
+
+	.video-frame iframe {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+
+	.video-frame.is-portrait {
+		width: min(100%, 360px);
+		aspect-ratio: 9 / 16;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.work-heading {
+		display: grid;
+		gap: 12px;
+		padding-bottom: 22px;
+		border-bottom: 2px solid var(--line-local);
+	}
+
+	.work-heading p {
+		color: var(--muted-local);
+	}
+
+	.work-heading h2 {
+		max-width: 22ch;
+		font-size: clamp(22px, 3vw, 34px);
+		font-weight: 400;
+		line-height: 1.14;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.work-data {
+		display: grid;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.work-data div {
+		display: grid;
+		grid-template-columns: 92px minmax(0, 1fr);
+		gap: 18px;
+		padding: 11px 0;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.work-data div:last-child {
+		border-bottom: 0;
+	}
+
+	dt {
+		color: var(--ink-local);
+	}
+
+	dd {
+		color: var(--muted-local);
+		font-size: 14px;
+		line-height: 1.55;
+	}
+
+	.work-copy {
+		display: grid;
+		gap: 26px;
+		max-width: 58ch;
+		padding-top: 26px;
+	}
+
+	.work-copy div {
+		display: grid;
+		gap: 10px;
+	}
+
+	.work-copy h3 {
+		color: var(--muted-local);
+	}
+
+	.work-copy p {
+		font-size: clamp(14px, 1.28vw, 16px);
+		line-height: 1.76;
+		letter-spacing: 0.008em;
+	}
+
+	.lightbox {
+		position: fixed;
+		inset: 0;
+		z-index: 20;
+		display: grid;
+		place-items: center;
+		padding: 48px;
+		background: rgba(16, 16, 13, 0.88);
+	}
+
+	.lightbox[hidden] {
+		display: none;
+	}
+
+	.lightbox img {
+		display: block;
+		max-width: min(1100px, 92vw);
+		max-height: 82vh;
+		border: 1px solid #f5f1e8;
+		background: #f5f1e8;
+	}
+
+	.lightbox-close {
+		position: fixed;
+		top: 18px;
+		right: 18px;
+		border: 1px solid #f5f1e8;
+		background: transparent;
+		color: #f5f1e8;
+		font-family: "SFMono-Regular", "Roboto Mono", "Liberation Mono", Consolas, monospace;
+		font-size: 10px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+
+	@media (max-width: 900px) {
+		.works-shell {
+			width: min(100% - 24px, 720px);
+		}
+
+		.works-header {
+			grid-template-columns: 64px minmax(0, 1fr);
+			column-gap: 12px;
+		}
+
+		.work-selector {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.work-selector-button:nth-child(2n) {
+			border-right: 0;
+		}
+
+		.work-panel {
+			grid-template-columns: 1fr;
+			gap: 34px;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.works-header {
+			grid-template-columns: 1fr;
+			gap: 18px;
+		}
+
+		.work-selector {
+			grid-template-columns: 1fr;
+		}
+
+		.work-selector-button {
+			min-height: 0;
+			border-right: 0;
+		}
+
+		.gallery-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.work-data div {
+			grid-template-columns: 1fr;
+			gap: 4px;
+		}
+
+		.lightbox {
+			padding: 18px;
+		}
+	}
+</style>

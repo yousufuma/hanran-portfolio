@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+	<title id="title">On the Other Side of the Wall placeholder 02</title>
+	<desc id="desc">Minimal placeholder diagram for looping reset structure.</desc>
+	<rect width="1200" height="900" fill="#f5f1e8"/>
+	<path d="M90 90H1110M90 810H1110M90 90V810M1110 90V810" fill="none" stroke="#10100d" stroke-width="4"/>
+	<circle cx="410" cy="450" r="150" fill="none" stroke="#10100d" stroke-width="2"/>
+	<circle cx="790" cy="450" r="150" fill="none" stroke="#10100d" stroke-width="2"/>
+	<path d="M560 450H640" stroke="#143d31" stroke-width="7"/>
+	<path d="M790 300L835 345M790 600L745 555" stroke="#143d31" stroke-width="5"/>
+	<text x="120" y="150" font-family="monospace" font-size="28" fill="#10100d">LOOP / RESET / TRANSITION / 02</text>
+</svg>

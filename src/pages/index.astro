@@ -1,0 +1,718 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const identityGroups = [
+	{
+		names: [
+			{ value: 'Hanran Ma', lang: 'en', primary: true },
+			{ value: '馬瀚然', lang: 'zh' },
+		],
+	},
+	{
+		names: [
+			{ value: 'Yusuf Ma', lang: 'en' },
+			{ value: 'يوسف ما', lang: 'ar' },
+		],
+	},
+];
+
+const directions = [
+	'My research and artistic practice are based on interactive media, game engines, real-time visual systems, and electronic sound.',
+	'I am interested in how game engines, especially Unity, can move beyond their role as production tools and become artistic infrastructures for organizing images, interaction, narrative states, and audience experience.',
+	'My current research focuses on the technical organization of hybrid interactive art. It examines how state-machine narrative, real-time visual orchestration, event-driven logic, and generative content pipelines can shape the structure of an artwork, the rhythm of interaction, and the way audiences understand what is happening inside a system.',
+	'This direction grows from my recent Unity-based projects, including experimental walking simulations, interactive narrative systems, and multisensory sound-visual interfaces. Across these works, I am concerned with how technical structures can become part of artistic expression rather than remaining hidden implementation details.',
+];
+
+const soundCloudUrl =
+	'https://soundcloud.com/ttfdpkmc0ssc?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing';
+
+const navigation = [
+	{
+		href: '/works',
+		title: 'works',
+		code: 'image systems',
+		meta: 'states / frames / visual engines',
+	},
+	{
+		href: '/research',
+		title: 'research',
+		code: 'technical grammar',
+		meta: 'papers / notes / methods',
+	},
+	{
+		href: '/practice',
+		title: 'practice',
+		code: 'practice & pedagogy',
+		meta: 'personal projects / collaborations / student Unity works',
+	},
+	{
+		href: soundCloudUrl,
+		title: 'sound',
+		code: 'frequencies',
+		meta: 'underground / rhythm / listening',
+		target: '_blank',
+		rel: 'noopener noreferrer',
+	},
+];
+---
+
+<Layout>
+	<main class="register-shell" aria-labelledby="site-title">
+		<section class="hero-grid">
+			<aside class="margin-note" aria-label="Index metadata">
+				<span>00</span>
+				<span>Index</span>
+			</aside>
+
+			<div class="name-block">
+				<section class="identity-card" aria-label="Artist identity card">
+					<div class="identity-rule identity-rule-top" aria-hidden="true">
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+					<div class="identity-columns">
+						{
+							identityGroups.map((group) => (
+								<div class="identity-column">
+									{group.names.map((name) =>
+										name.primary ? (
+											<h1 id="site-title" class={`identity-name ${name.lang} primary-name`}>
+												{name.value}
+											</h1>
+										) : (
+											<p class={`identity-name ${name.lang}`}>{name.value}</p>
+										),
+									)}
+								</div>
+							))
+						}
+					</div>
+					<div class="identity-rule identity-rule-bottom" aria-hidden="true">
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</section>
+			</div>
+		</section>
+
+		<section class="register-grid" aria-labelledby="identity-title">
+			<div class="section-mark">
+				<span>01</span>
+				<h2 id="identity-title" data-identity-title>Identity Statement</h2>
+			</div>
+			<div id="identity-content" class="statement" data-identity-region>
+				<div class="identity-panel identity-panel--statement" data-identity-panel="statement">
+					<p>Media artist, researcher, lecturer in Digital Media Technology.</p>
+					<p>
+						Working across game engines, interactive systems, electronic sound, and experimental
+						media.
+					</p>
+				</div>
+				<div class="identity-panel education-panel" data-identity-panel="education" hidden>
+					<section>
+						<h3>Basic Information</h3>
+						<p>Hanran Ma / 馬瀚然 / Yusuf Ma</p>
+						<p>Born in Chongqing, China.</p>
+						<p>Media artist, researcher, and former lecturer in Digital Media Technology.</p>
+					</section>
+					<section>
+						<h3>Education</h3>
+						<div>
+							<p>M.A. in Interactive Media Arts</p>
+							<p>New York University</p>
+							<p>2021–2022</p>
+						</div>
+						<div>
+							<p>B.A. in New Technologies of Art</p>
+							<p>Accademia Albertina di Belle Arti di Torino</p>
+							<p>2014–2017</p>
+						</div>
+					</section>
+					<section>
+						<h3>Professional Background</h3>
+						<div>
+							<p>Former Lecturer in Digital Media Technology</p>
+							<p>Chongqing College of International Business and Economics</p>
+							<p>2022–2025</p>
+						</div>
+						<div>
+							<p>Former Executive Director</p>
+							<p>Xu Beihong Art Museum, Chongqing</p>
+							<p>2020–2021</p>
+						</div>
+						<div>
+							<p>Former Multimedia Designer</p>
+							<p>Chongqing Daoshi Cultural Consulting Co., Ltd.</p>
+							<p>2017–2019</p>
+						</div>
+					</section>
+				</div>
+				<button
+					class="identity-toggle"
+					type="button"
+					data-identity-toggle
+					aria-controls="identity-content"
+					aria-expanded="false"
+				>
+					view education / basic information
+				</button>
+			</div>
+		</section>
+
+		<section class="register-grid" aria-labelledby="direction-title">
+			<div class="section-mark">
+				<span>02</span>
+				<h2 id="direction-title">Research and Artistic Direction</h2>
+			</div>
+			<div class="direction-copy">
+				{directions.map((direction) => <p>{direction}</p>)}
+			</div>
+		</section>
+
+		<section class="register-grid" aria-labelledby="register-title">
+			<div class="section-mark">
+				<span>03</span>
+				<h2 id="register-title">Register Entries</h2>
+			</div>
+			<nav class="index-list" aria-label="Primary sections">
+				{
+					navigation.map((item, index) => (
+						<a href={item.href} target={item.target} rel={item.rel} data-state="pending">
+							<span class="index-number">{String(index + 1).padStart(2, '0')}</span>
+							<span class="index-title">/{item.title}</span>
+							<span class="index-code">{item.code}</span>
+							<span class="index-meta">{item.meta}</span>
+						</a>
+					))
+				}
+			</nav>
+		</section>
+
+		<footer class="register-grid contact-grid" aria-labelledby="contact-title">
+			<div class="section-mark">
+				<span>04</span>
+				<h2 id="contact-title">Contact</h2>
+			</div>
+			<div class="contact-line">
+				<a class="contact-email" href="mailto:youcometwice@gmail.com">youcometwice@gmail.com</a>
+				<a class="cv-download" href="/cv/HanranMa_CV.pdf" download>
+					download cv
+				</a>
+			</div>
+		</footer>
+	</main>
+</Layout>
+
+<script>
+	const registerEntryLinks = document.querySelectorAll('.index-list a');
+	const identityTitle = document.querySelector('[data-identity-title]');
+	const identityToggle = document.querySelector('[data-identity-toggle]');
+	const identityStatementPanel = document.querySelector('[data-identity-panel="statement"]');
+	const identityEducationPanel = document.querySelector('[data-identity-panel="education"]');
+
+	for (const link of registerEntryLinks) {
+		const activate = () => link.classList.add('is-expanded');
+		const deactivate = () => link.classList.remove('is-expanded');
+
+		link.addEventListener('mouseenter', activate);
+		link.addEventListener('mouseleave', deactivate);
+		link.addEventListener('focus', activate);
+		link.addEventListener('blur', deactivate);
+	}
+
+	if (identityToggle && identityStatementPanel && identityEducationPanel && identityTitle) {
+		identityToggle.addEventListener('click', () => {
+			const showEducation = identityEducationPanel.hasAttribute('hidden');
+
+			identityStatementPanel.toggleAttribute('hidden', showEducation);
+			identityEducationPanel.toggleAttribute('hidden', !showEducation);
+			identityToggle.setAttribute('aria-expanded', String(showEducation));
+			identityToggle.textContent = showEducation
+				? 'back to identity statement'
+				: 'view education / basic information';
+			identityTitle.textContent = showEducation ? 'Education / Basic Information' : 'Identity Statement';
+		});
+	}
+</script>
+
+<style>
+	:global(body) {
+		background: #f5f1e8;
+	}
+
+	.register-shell {
+		--field: #f5f1e8;
+		--ink-local: #10100d;
+		--faint: #5f5a51;
+		--line: #10100d;
+		--line-dark: #10100d;
+		--link: #143d31;
+		width: min(1120px, calc(100% - 32px));
+		min-height: 100vh;
+		margin: 0 auto;
+		padding: 34px 0 72px;
+		color: var(--ink-local);
+	}
+
+	.hero-grid,
+	.register-grid {
+		display: grid;
+		grid-template-columns: 86px minmax(0, 1fr);
+		column-gap: 28px;
+	}
+
+	.margin-note,
+	.section-mark,
+	.index-number,
+	.index-code,
+	.index-meta,
+	.cv-download {
+		font-family: "SFMono-Regular", "Roboto Mono", "Liberation Mono", Consolas, monospace;
+		font-size: 10px;
+		line-height: 1.35;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	p,
+	h1,
+	h2,
+	h3,
+	dl {
+		margin: 0;
+	}
+
+	.hero-grid {
+		min-height: 46vh;
+		padding: 18px 0 52px;
+		border-top: 2px solid var(--line-dark);
+		border-bottom: 1px solid var(--line-dark);
+	}
+
+	.margin-note {
+		display: grid;
+		align-content: start;
+		gap: 18px;
+		color: var(--faint);
+	}
+
+	.name-block {
+		display: grid;
+		align-content: end;
+		padding-top: 12vh;
+	}
+
+	.identity-card {
+		width: min(760px, 100%);
+		border-top: 3px solid var(--line-dark);
+		border-bottom: 1px solid var(--line-dark);
+	}
+
+	.identity-rule {
+		display: grid;
+		height: 18px;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.identity-rule span + span {
+		border-left: 1px solid var(--line);
+	}
+
+	.identity-rule span:nth-child(2) {
+		border-left-width: 2px;
+	}
+
+	.identity-rule-top {
+		grid-template-columns: 2.3fr 0.85fr 1.15fr;
+	}
+
+	.identity-rule-bottom {
+		grid-template-columns: 0.7fr 1.45fr 2.15fr;
+		height: 14px;
+		border-top: 1px solid var(--line);
+		border-bottom: 0;
+	}
+
+	.identity-columns {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		min-height: 168px;
+	}
+
+	.identity-column {
+		display: grid;
+		align-content: center;
+		gap: 18px;
+		padding: 26px 28px 30px 0;
+	}
+
+	.identity-column + .identity-column {
+		padding-right: 0;
+		padding-left: 28px;
+		border-left: 1px solid var(--line);
+	}
+
+	.identity-name {
+		margin: 0;
+		color: var(--ink-local);
+		font-size: clamp(18px, 2.3vw, 28px);
+		font-weight: 400;
+		line-height: 1.08;
+		letter-spacing: 0.1em;
+	}
+
+	.primary-name {
+		font-size: clamp(28px, 4vw, 44px);
+		letter-spacing: 0.13em;
+		text-transform: uppercase;
+	}
+
+	.identity-name.zh {
+		font-family: "Songti SC", "Noto Serif CJK TC", "PMingLiU", "SimSun", serif;
+		font-size: clamp(21px, 2.7vw, 34px);
+		letter-spacing: 0.22em;
+	}
+
+	.identity-name.ar {
+		direction: rtl;
+		font-family: "Noto Naskh Arabic", "Geeza Pro", "Amiri", "Arial", sans-serif;
+		font-size: clamp(21px, 2.7vw, 34px);
+		letter-spacing: 0.02em;
+		text-align: left;
+	}
+
+	.register-grid {
+		padding: 24px 0 58px;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.section-mark {
+		display: grid;
+		align-content: start;
+		gap: 18px;
+		color: var(--faint);
+	}
+
+	.section-mark span {
+		color: var(--ink-local);
+	}
+
+	h2 {
+		max-width: 120px;
+		font-size: 10px;
+		font-weight: 700;
+		line-height: 1.35;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.statement,
+	.direction-copy,
+	.index-list,
+	.contact-line {
+		grid-column: 2;
+	}
+
+	.statement {
+		display: grid;
+		gap: 20px;
+		max-width: 760px;
+		font-size: clamp(18px, 2vw, 26px);
+		line-height: 1.42;
+		letter-spacing: 0.035em;
+	}
+
+	.identity-panel--statement {
+		display: grid;
+		gap: 22px;
+	}
+
+	.identity-panel[hidden] {
+		display: none;
+	}
+
+	.education-panel {
+		display: grid;
+		width: min(64ch, 100%);
+		border-top: 1px solid var(--line);
+		font-size: 14px;
+		line-height: 1.56;
+		letter-spacing: 0.01em;
+	}
+
+	.education-panel section {
+		display: grid;
+		gap: 12px;
+		padding: 15px 0 18px;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.education-panel section > div {
+		display: grid;
+		gap: 2px;
+	}
+
+	.education-panel h3,
+	.identity-toggle {
+		font-family: "SFMono-Regular", "Roboto Mono", "Liberation Mono", Consolas, monospace;
+		font-size: 10px;
+		line-height: 1.35;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.education-panel h3 {
+		color: var(--faint);
+		font-weight: 400;
+	}
+
+	.identity-toggle {
+		justify-self: start;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--link);
+		text-align: left;
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 5px;
+		cursor: pointer;
+	}
+
+	.identity-toggle:hover,
+	.identity-toggle:focus-visible {
+		color: var(--ink-local);
+		outline: none;
+	}
+
+	.direction-copy {
+		display: grid;
+		width: min(58ch, 100%);
+		padding-top: 2px;
+		border-top: 1px solid var(--line);
+	}
+
+	.direction-copy p {
+		padding: 18px 0 22px;
+		border-bottom: 1px solid var(--line);
+		font-size: clamp(14px, 1.28vw, 16px);
+		line-height: 1.78;
+		letter-spacing: 0.008em;
+	}
+
+	.index-list {
+		display: grid;
+		border-top: 2px solid var(--line-dark);
+	}
+
+	.index-list a {
+		display: grid;
+		grid-template-columns: 48px minmax(96px, 0.34fr) minmax(150px, 0.48fr) minmax(0, 1fr);
+		column-gap: 24px;
+		align-items: baseline;
+		min-height: 50px;
+		padding: 14px 0 16px;
+		border-bottom: 1px solid var(--line);
+		text-decoration: none;
+		color: var(--link);
+	}
+
+	.index-list a::after {
+		content: "";
+	}
+
+	.index-list a:hover,
+	.index-list a:focus-visible {
+		color: var(--ink-local);
+		outline: none;
+	}
+
+	.index-title {
+		display: inline-block;
+		font-family: "SFMono-Regular", "Roboto Mono", "Liberation Mono", Consolas, monospace;
+		font-size: 12px;
+		line-height: 1.35;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		transform: scale(1);
+		transform-origin: left center;
+		transition:
+			transform 180ms ease,
+			letter-spacing 180ms ease;
+		will-change: transform;
+	}
+
+	.index-list a.is-expanded .index-title {
+		letter-spacing: 0.1em;
+		transform: scale(1.18);
+	}
+
+	.index-code {
+		font-size: 11px;
+		color: var(--link);
+	}
+
+	.index-meta {
+		font-size: 10px;
+		color: var(--faint);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.index-title {
+			transition: none;
+		}
+	}
+
+	.contact-grid {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+
+	.contact-line {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 24px;
+	}
+
+	.contact-email {
+		color: var(--link);
+		font-size: clamp(17px, 2vw, 24px);
+		line-height: 1.2;
+		letter-spacing: 0.05em;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 5px;
+		text-transform: uppercase;
+	}
+
+	.cv-download {
+		display: inline-block;
+		padding: 8px 0;
+		border-top: 1px solid var(--line);
+		border-bottom: 1px solid var(--line);
+		color: var(--link);
+		text-decoration: none;
+	}
+
+	.contact-email:hover,
+	.contact-email:focus-visible,
+	.cv-download:hover,
+	.cv-download:focus-visible {
+		color: var(--ink-local);
+		outline: none;
+	}
+
+	@media (max-width: 900px) {
+		.register-shell {
+			width: min(100% - 24px, 720px);
+		}
+
+		.hero-grid,
+		.register-grid {
+			grid-template-columns: 64px minmax(0, 1fr);
+			gap: 12px;
+		}
+
+		.name-block,
+		.statement,
+		.direction-copy,
+		.index-list,
+		.contact-line {
+			grid-column: 2;
+		}
+
+		.hero-grid {
+			min-height: auto;
+		}
+
+		.name-block {
+			padding: 9vh 0 3vh;
+		}
+
+		.identity-card {
+			width: 100%;
+		}
+
+		.identity-columns {
+			min-height: 150px;
+		}
+
+		.identity-column {
+			padding: 22px 18px 24px 0;
+		}
+
+		.identity-column + .identity-column {
+			padding-left: 18px;
+		}
+
+		.index-list a {
+			grid-template-columns: 38px minmax(0, 1fr);
+			row-gap: 5px;
+			min-height: 0;
+		}
+
+		.index-code,
+		.index-meta {
+			grid-column: 2;
+		}
+
+		.contact-line {
+			display: grid;
+		}
+	}
+
+	@media (max-width: 520px) {
+		.hero-grid,
+		.register-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.name-block,
+		.statement,
+		.direction-copy,
+		.index-list,
+		.contact-line {
+			grid-column: 1;
+		}
+
+		.margin-note {
+			grid-template-columns: repeat(2, max-content);
+			gap: 12px;
+		}
+
+		.section-mark {
+			grid-template-columns: 38px minmax(0, 1fr);
+			gap: 10px;
+		}
+
+		.identity-rule {
+			height: 13px;
+		}
+
+		.identity-columns {
+			grid-template-columns: 1fr;
+			min-height: 0;
+		}
+
+		.identity-column {
+			padding: 22px 0 24px;
+		}
+
+		.identity-column + .identity-column {
+			padding-left: 0;
+			border-top: 1px solid var(--line);
+			border-left: 0;
+		}
+
+		h2 {
+			max-width: none;
+		}
+
+		.statement {
+			font-size: 18px;
+		}
+
+	}
+</style>

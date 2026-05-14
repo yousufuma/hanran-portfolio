@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+	<title id="title">Interactive Design for Deaf and Hard-of-Hearing Audiences placeholder 01</title>
+	<desc id="desc">Minimal placeholder image for sound visualization.</desc>
+	<rect width="1200" height="900" fill="#f5f1e8"/>
+	<path d="M90 90H1110M90 810H1110M90 90V810M1110 90V810" fill="none" stroke="#10100d" stroke-width="4"/>
+	<path d="M160 535C240 410 310 650 390 520S540 350 620 515S780 640 850 505S950 340 1040 480" fill="none" stroke="#143d31" stroke-width="7"/>
+	<path d="M160 640H1040M160 260H1040" stroke="#10100d" stroke-width="1"/>
+	<text x="120" y="150" font-family="monospace" font-size="26" fill="#10100d">SOUND / VISUAL RESPONSE / 01</text>
+</svg>

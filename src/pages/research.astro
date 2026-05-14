@@ -1,0 +1,418 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { papers, proposals, updates } from '../data/research.js';
+---
+
+<Layout>
+	<main class="research-shell">
+		<header class="research-header">
+			<a class="home-link" href="/">← home</a>
+			<div class="page-title">
+				<h1>Research</h1>
+				<p>
+					Papers, proposals, and research notes on game engines, interactive systems, and
+					hybrid media art.
+				</p>
+			</div>
+		</header>
+
+		<section class="research-section" aria-labelledby="article-title">
+			<div class="section-label">
+				<span>A</span>
+				<h2 id="article-title">Journal Article / Accepted Paper</h2>
+			</div>
+			<div class="section-content">
+				{
+					papers.map((paper) => (
+						<article class="research-entry">
+							<header class="entry-heading">
+								<h3>{paper.title}</h3>
+							</header>
+
+							<dl class="entry-details">
+								<div>
+									<dt>Author</dt>
+									<dd>{paper.author}</dd>
+								</div>
+								<div>
+									<dt>Status</dt>
+									<dd>{paper.status}</dd>
+								</div>
+								<div>
+									<dt>Journal</dt>
+									<dd>{paper.journal}</dd>
+								</div>
+								<div>
+									<dt>Keywords</dt>
+									<dd>{paper.keywords.join('; ')}</dd>
+								</div>
+							</dl>
+
+							<div class="entry-copy">
+								<h4>Abstract</h4>
+								<p>{paper.abstract}</p>
+							</div>
+
+							<nav class="entry-links" aria-label={`${paper.title} links`}>
+								{paper.links.map((link) => <a href={link.href}>{link.label}</a>)}
+							</nav>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="research-section" aria-labelledby="proposal-title">
+			<div class="section-label">
+				<span>B</span>
+				<h2 id="proposal-title">PhD Research Proposal</h2>
+			</div>
+			<div class="section-content">
+				{
+					proposals.map((proposal) => (
+						<article class="research-entry">
+							<header class="entry-heading">
+								<h3>{proposal.title}</h3>
+							</header>
+
+							<dl class="entry-details">
+								<div>
+									<dt>Research Type</dt>
+									<dd>{proposal.researchType}</dd>
+								</div>
+								<div>
+									<dt>Keywords</dt>
+									<dd>{proposal.keywords.join('; ')}</dd>
+								</div>
+							</dl>
+
+							<div class="entry-copy">
+								<h4>Abstract</h4>
+								<p>{proposal.abstract}</p>
+							</div>
+
+							<nav class="entry-links" aria-label={`${proposal.title} links`}>
+								{proposal.links.map((link) => <a href={link.href}>{link.label}</a>)}
+							</nav>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="research-section updates-section" aria-labelledby="updates-title">
+			<div class="section-label">
+				<span>C</span>
+				<h2 id="updates-title">Research Updates</h2>
+			</div>
+			<div class="section-content">
+				<div class="updates-list">
+					{
+						updates.map((update) => (
+							<article class="update-entry">
+								<time>{update.date}</time>
+								<div>
+									<a href={update.link}>{update.title}</a>
+									<p class="update-type">{update.type}</p>
+									<p>{update.note}</p>
+								</div>
+							</article>
+						))
+					}
+				</div>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	:global(body) {
+		background: #f5f1e8;
+	}
+
+	.research-shell {
+		--paper-local: #f5f1e8;
+		--ink-local: #10100d;
+		--muted-local: #5f5a51;
+		--line-local: #10100d;
+		--link-local: #143d31;
+		width: min(1120px, calc(100% - 32px));
+		min-height: 100vh;
+		margin: 0 auto;
+		padding: 34px 0 78px;
+		color: var(--ink-local);
+	}
+
+	.research-header,
+	.research-section {
+		display: grid;
+		grid-template-columns: 86px minmax(0, 1fr);
+		column-gap: 28px;
+	}
+
+	.research-header {
+		align-items: start;
+		padding: 18px 0 34px;
+		border-top: 2px solid var(--line-local);
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.home-link,
+	.page-title p,
+	.section-label,
+	dt,
+	.entry-copy h4,
+	.entry-links,
+	.update-entry time,
+	.update-type {
+		font-family: "SFMono-Regular", "Roboto Mono", "Liberation Mono", Consolas, monospace;
+		font-size: 10px;
+		line-height: 1.35;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	p,
+	h1,
+	h2,
+	h3,
+	h4,
+	dl,
+	dd {
+		margin: 0;
+	}
+
+	.home-link {
+		color: var(--link-local);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 4px;
+	}
+
+	.home-link:hover,
+	.home-link:focus-visible {
+		color: var(--ink-local);
+		outline: none;
+	}
+
+	.page-title {
+		display: grid;
+		gap: 14px;
+		max-width: 660px;
+	}
+
+	.page-title h1 {
+		font-size: clamp(26px, 3.4vw, 42px);
+		font-weight: 400;
+		line-height: 1.08;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.page-title p {
+		max-width: 54ch;
+		color: var(--muted-local);
+	}
+
+	.research-section {
+		padding: 34px 0 72px;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.section-label {
+		display: grid;
+		align-content: start;
+		gap: 18px;
+		color: var(--muted-local);
+	}
+
+	.section-label span {
+		color: var(--ink-local);
+	}
+
+	.section-label h2 {
+		max-width: 118px;
+		font-size: 10px;
+		font-weight: 700;
+		line-height: 1.35;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.section-content {
+		grid-column: 2;
+	}
+
+	.research-entry {
+		display: grid;
+		gap: 26px;
+		max-width: 880px;
+	}
+
+	.entry-heading {
+		max-width: 780px;
+		padding-bottom: 24px;
+		border-bottom: 2px solid var(--line-local);
+	}
+
+	.entry-heading h3 {
+		font-size: clamp(20px, 2.6vw, 32px);
+		font-weight: 400;
+		line-height: 1.18;
+		letter-spacing: 0.025em;
+	}
+
+	.entry-details {
+		display: grid;
+		max-width: 780px;
+		border-top: 1px solid var(--line-local);
+	}
+
+	.entry-details div {
+		display: grid;
+		grid-template-columns: 130px minmax(0, 1fr);
+		gap: 24px;
+		padding: 12px 0;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	dt {
+		color: var(--ink-local);
+	}
+
+	dd {
+		color: var(--muted-local);
+		font-size: 14px;
+		line-height: 1.55;
+	}
+
+	.entry-copy {
+		display: grid;
+		gap: 12px;
+		max-width: 64ch;
+	}
+
+	.entry-copy h4 {
+		color: var(--muted-local);
+	}
+
+	.entry-copy p {
+		font-size: clamp(14px, 1.28vw, 16px);
+		line-height: 1.78;
+		letter-spacing: 0.008em;
+	}
+
+	.entry-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px 20px;
+		max-width: 780px;
+		padding-top: 18px;
+		border-top: 1px solid var(--line-local);
+	}
+
+	.entry-links a,
+	.update-entry a {
+		color: var(--link-local);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 4px;
+	}
+
+	.entry-links a:hover,
+	.entry-links a:focus-visible,
+	.update-entry a:hover,
+	.update-entry a:focus-visible {
+		color: var(--ink-local);
+		outline: none;
+	}
+
+	.updates-section {
+		border-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	.updates-list {
+		display: grid;
+		max-width: 780px;
+		border-top: 2px solid var(--line-local);
+	}
+
+	.update-entry {
+		display: grid;
+		grid-template-columns: 92px minmax(0, 1fr);
+		gap: 24px;
+		padding: 16px 0 22px;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.update-entry time,
+	.update-type {
+		color: var(--muted-local);
+	}
+
+	.update-entry div {
+		display: grid;
+		gap: 8px;
+	}
+
+	.update-entry a {
+		width: fit-content;
+		font-size: 17px;
+		line-height: 1.25;
+		letter-spacing: 0.02em;
+	}
+
+	.update-entry p:not(.update-type) {
+		max-width: 58ch;
+		font-size: 14px;
+		line-height: 1.65;
+		color: var(--muted-local);
+	}
+
+	@media (max-width: 900px) {
+		.research-shell {
+			width: min(100% - 24px, 720px);
+		}
+
+		.research-header,
+		.research-section {
+			grid-template-columns: 64px minmax(0, 1fr);
+			column-gap: 12px;
+		}
+
+		.section-content {
+			grid-column: 2;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.research-header,
+		.research-section {
+			grid-template-columns: 1fr;
+			gap: 22px;
+		}
+
+		.section-content {
+			grid-column: 1;
+		}
+
+		.section-label {
+			grid-template-columns: 34px minmax(0, 1fr);
+			gap: 10px;
+		}
+
+		.section-label h2 {
+			max-width: none;
+		}
+
+		.entry-details div,
+		.update-entry {
+			grid-template-columns: 1fr;
+			gap: 6px;
+		}
+
+		.entry-links {
+			display: grid;
+			gap: 10px;
+		}
+	}
+</style>

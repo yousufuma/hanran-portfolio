@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<meta
+			name="description"
+			content="Academic portfolio for Hanran Ma: research, projects, publication, teaching, systems, media, and contact."
+		/>
+		<title>Hanran Ma</title>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style>
+	:root {
+		color-scheme: light;
+		background: #f4f0e8;
+		color: #11100e;
+		font-family:
+			"Arial Narrow", "Helvetica Neue Condensed", "Roboto Condensed", "Liberation Sans Narrow",
+			Arial, sans-serif;
+		font-size: 15px;
+		line-height: 1.42;
+		font-synthesis: none;
+		text-rendering: geometricPrecision;
+		--paper: #f4f0e8;
+		--ink: #11100e;
+		--muted: #686158;
+		--rule: #c8c0b5;
+		--accent: #4338ca;
+		--accent-soft: #ddd8ff;
+	}
+
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		min-height: 100%;
+		background: var(--paper);
+		color: var(--ink);
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	a {
+		color: inherit;
+	}
+</style>

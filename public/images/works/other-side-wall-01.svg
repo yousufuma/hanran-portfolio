@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+	<title id="title">On the Other Side of the Wall placeholder 01</title>
+	<desc id="desc">Minimal placeholder image for a Unity walking simulation scene.</desc>
+	<rect width="1200" height="900" fill="#f5f1e8"/>
+	<path d="M90 90H1110M90 810H1110M90 90V810M1110 90V810" fill="none" stroke="#10100d" stroke-width="4"/>
+	<path d="M180 225H1020M180 450H1020M180 675H1020" stroke="#10100d" stroke-width="1"/>
+	<path d="M300 720C430 570 500 570 620 450C760 310 835 310 960 190" fill="none" stroke="#143d31" stroke-width="6"/>
+	<text x="120" y="150" font-family="monospace" font-size="28" fill="#10100d">ON THE OTHER SIDE OF THE WALL / 01</text>
+</svg>
