@@ -17,10 +17,9 @@ const identityGroups = [
 ];
 
 const directions = [
-	'My research and artistic practice are based on interactive media, game engines, real-time visual systems, and electronic sound.',
-	'I am interested in how game engines, especially Unity, can move beyond their role as production tools and become artistic infrastructures for organizing images, interaction, narrative states, and audience experience.',
-	'My current research focuses on the technical organization of hybrid interactive art. It examines how state-machine narrative, real-time visual orchestration, event-driven logic, and generative content pipelines can shape the structure of an artwork, the rhythm of interaction, and the way audiences understand what is happening inside a system.',
-	'This direction grows from my recent Unity-based projects, including experimental walking simulations, interactive narrative systems, and multisensory sound-visual interfaces. Across these works, I am concerned with how technical structures can become part of artistic expression rather than remaining hidden implementation details.',
+	'My research examines how game engines, especially Unity, can function not only as production tools but as creative and technical infrastructures for hybrid interactive art.',
+	'I am interested in how state logic, event-driven interaction, realtime visual feedback, and generative content pipelines shape image, narrative, perception, and audience experience.',
+	'My current PhD-facing direction develops a reusable Unity-based framework organised around state-machine narrative, realtime visual orchestration, and generative media pipelines. Across this work, technical structure becomes a visible part of artistic expression.',
 ];
 
 const soundCloudUrl =
@@ -94,6 +93,10 @@ const navigation = [
 						<span></span>
 					</div>
 				</section>
+				<p class="discipline-line">
+					<span>Media Art</span><i>/</i><span>Interactive Systems</span><i>/</i>
+					<span>Game Engine Research</span><i>/</i><span>Higher Education</span>
+				</p>
 			</div>
 		</section>
 
@@ -104,50 +107,138 @@ const navigation = [
 			</div>
 			<div id="identity-content" class="statement" data-identity-region>
 				<div class="identity-panel identity-panel--statement" data-identity-panel="statement">
-					<p>Media artist, researcher, lecturer in Digital Media Technology.</p>
+					<p>Independent media artist and researcher. Former Lecturer in Digital Media Technology.</p>
 					<p>
-						Working across game engines, interactive systems, electronic sound, and experimental
-						media.
+						Current PhD-facing work centres on Unity-based interactive systems and game engines as
+						artistic infrastructures.
 					</p>
 				</div>
-				<div class="identity-panel education-panel" data-identity-panel="education" hidden>
-					<section>
-						<h3>Basic Information</h3>
-						<p>Hanran Ma / 馬瀚然 / Yusuf Ma</p>
-						<p>Born in Chongqing, China.</p>
-						<p>Media artist, researcher, and former lecturer in Digital Media Technology.</p>
-					</section>
-					<section>
-						<h3>Education</h3>
-						<div>
-							<p>M.A. in Interactive Media Arts</p>
-							<p>New York University</p>
-							<p>2021–2022</p>
+				<div class="identity-panel cv-dossier" data-identity-panel="education" hidden>
+					<div class="dossier-toolbar">
+						<p><span>drag to browse</span><span>or use arrow keys</span></p>
+						<div class="dossier-controls" aria-label="CV section controls">
+							<button type="button" data-dossier-prev aria-label="Previous CV section">←</button>
+							<button type="button" data-dossier-next aria-label="Next CV section">→</button>
 						</div>
-						<div>
-							<p>B.A. in New Technologies of Art</p>
-							<p>Accademia Albertina di Belle Arti di Torino</p>
-							<p>2014–2017</p>
+					</div>
+					<div
+						class="dossier-viewport"
+						data-dossier-viewport
+						tabindex="0"
+						aria-label="CV summary. Drag horizontally or use the left and right arrow keys."
+					>
+						<div class="dossier-track">
+							<section class="dossier-card">
+								<p class="dossier-index">01 / Education</p>
+								<div class="dossier-entry">
+									<h3>M.A. in Interactive Media Arts (IMA)</h3>
+									<p>New York University</p>
+									<p class="dossier-meta">2021–2022</p>
+								</div>
+								<div class="dossier-entry">
+									<h3>B.A. in New Technologies of Art</h3>
+									<p>Accademia Albertina di Belle Arti di Torino</p>
+									<p class="dossier-meta">2014–2017</p>
+								</div>
+							</section>
+
+							<section class="dossier-card">
+								<p class="dossier-index">02 / Academic positions & employment</p>
+								<div class="dossier-entry">
+									<h3>Lecturer in Digital Media Technology</h3>
+									<p class="dossier-meta">
+										Chongqing College of International Business and Economics / 2022–2025
+									</p>
+									<p>
+										Designed and delivered Interactive Technology and Virtual Reality courses;
+										established the college’s first Digital Media Studio; supervised project work and
+										undergraduate theses.
+									</p>
+								</div>
+								<div class="dossier-entry dossier-entry--compact">
+									<h3>Executive Director</h3>
+									<p class="dossier-meta">Xu Beihong Art Museum / 2020–2021</p>
+								</div>
+								<div class="dossier-entry dossier-entry--compact">
+									<h3>Multimedia Designer</h3>
+									<p class="dossier-meta">
+										Chongqing Daoshi Cultural Consulting Co., Ltd. / 2017–2019
+									</p>
+								</div>
+							</section>
+
+							<section class="dossier-card">
+								<p class="dossier-index">03 / Publication & exhibitions</p>
+								<div class="dossier-entry">
+									<h3>
+										Design and Implementation of a Unity-Based Experimental Walking Simulation with
+										Dialogue-Driven Interaction and Looping Scene Control
+									</h3>
+									<p class="dossier-meta">
+										Ma, H. / Computing, Performance and Communication Systems / Issue 1 / 2026 /
+										accepted for publication
+									</p>
+								</div>
+								<ul class="dossier-list">
+									<li><span>Result Fairy</span><small>NYU Art Gallery, New York / 2021</small></li>
+									<li>
+										<span>Temporary Radio: Children Do Not Lie</span
+										><small>Yuan Art Museum, Chongqing / 2021</small>
+									</li>
+									<li><span>Taixu huanjing</span><small>Kumamoto Museum of Art, Japan / 2022</small></li>
+								</ul>
+							</section>
+
+							<section class="dossier-card">
+								<p class="dossier-index">04 / Selected research & artistic projects</p>
+								<ul class="dossier-list dossier-list--projects">
+									<li>
+										<span>Game Engines as Technical Platforms for Hybrid Interactive Art</span
+										><small>PhD research direction / 2026</small>
+									</li>
+									<li>
+										<span>On the Other Side of the Wall</span
+										><small>Experimental walking simulation / Unity</small>
+									</li>
+									<li>
+										<span>Something Big Is Coming</span
+										><small>Interactive narrative system / 2025</small>
+									</li>
+									<li>
+										<span>Interactive Design for Deaf and Hard-of-Hearing Audiences</span
+										><small>Unity + external devices / 2024–2025</small>
+									</li>
+									<li>
+										<span>Children’s System: Eggs Eggs Eggs</span
+										><small>Multimedia art education project / 2020</small>
+									</li>
+								</ul>
+							</section>
+
+							<section class="dossier-card">
+								<p class="dossier-index">05 / Methods, tools & certification</p>
+								<ul class="keyword-cloud" aria-label="Research keywords">
+									<li>Unity-based hybrid interactive art</li>
+									<li>State-machine narrative</li>
+									<li>Realtime visual orchestration</li>
+									<li>Generative media pipelines</li>
+									<li>Structural legibility</li>
+									<li>Research-through-design</li>
+								</ul>
+								<div class="dossier-entry dossier-entry--compact">
+									<h3>Tools</h3>
+									<p>
+										Unity / TouchDesigner / Processing / Blender / vvvv Gamma / Arduino / sensors /
+										realtime media workflows
+									</p>
+								</div>
+								<div class="dossier-entry dossier-entry--compact">
+									<h3>Certification</h3>
+									<p>Unity Certified Educator / Member, China Computer Graphics Society</p>
+								</div>
+							</section>
 						</div>
-					</section>
-					<section>
-						<h3>Professional Background</h3>
-						<div>
-							<p>Former Lecturer in Digital Media Technology</p>
-							<p>Chongqing College of International Business and Economics</p>
-							<p>2022–2025</p>
-						</div>
-						<div>
-							<p>Former Executive Director</p>
-							<p>Xu Beihong Art Museum, Chongqing</p>
-							<p>2020–2021</p>
-						</div>
-						<div>
-							<p>Former Multimedia Designer</p>
-							<p>Chongqing Daoshi Cultural Consulting Co., Ltd.</p>
-							<p>2017–2019</p>
-						</div>
-					</section>
+					</div>
 				</div>
 				<button
 					class="identity-toggle"
@@ -156,7 +247,7 @@ const navigation = [
 					aria-controls="identity-content"
 					aria-expanded="false"
 				>
-					view education / basic information
+					view cv profile / education
 				</button>
 			</div>
 		</section>
@@ -196,7 +287,10 @@ const navigation = [
 				<h2 id="contact-title">Contact</h2>
 			</div>
 			<div class="contact-line">
-				<a class="contact-email" href="mailto:youcometwice@gmail.com">youcometwice@gmail.com</a>
+				<div class="contact-primary">
+					<a class="contact-email" href="mailto:youcometwice@gmail.com">youcometwice@gmail.com</a>
+					<a class="contact-phone" href="tel:+8618323072776">+86 183 2307 2776</a>
+				</div>
 				<a class="cv-download" href="/cv/HanranMa_CV.pdf" download>
 					download cv
 				</a>
@@ -231,9 +325,75 @@ const navigation = [
 			identityToggle.setAttribute('aria-expanded', String(showEducation));
 			identityToggle.textContent = showEducation
 				? 'back to identity statement'
-				: 'view education / basic information';
-			identityTitle.textContent = showEducation ? 'Education / Basic Information' : 'Identity Statement';
+				: 'view cv profile / education';
+			identityTitle.textContent = showEducation ? 'CV Profile' : 'Identity Statement';
+			if (showEducation) {
+				requestAnimationFrame(() => dossierViewport?.dispatchEvent(new Event('scroll')));
+			}
 		});
+	}
+
+	const dossierViewport = document.querySelector<HTMLElement>('[data-dossier-viewport]');
+	const dossierPrev = document.querySelector<HTMLButtonElement>('[data-dossier-prev]');
+	const dossierNext = document.querySelector<HTMLButtonElement>('[data-dossier-next]');
+
+	if (dossierViewport && dossierPrev && dossierNext) {
+		let pointerStart = 0;
+		let scrollStart = 0;
+		let dragging = false;
+
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const scrollByPanel = (direction: number) => {
+			dossierViewport.scrollBy({
+				left: direction * dossierViewport.clientWidth * 0.82,
+				behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
+			});
+		};
+
+		const updateDossierControls = () => {
+			const maxScroll = dossierViewport.scrollWidth - dossierViewport.clientWidth;
+			dossierPrev.disabled = dossierViewport.scrollLeft <= 2;
+			dossierNext.disabled = dossierViewport.scrollLeft >= maxScroll - 2;
+		};
+
+		dossierPrev.addEventListener('click', () => scrollByPanel(-1));
+		dossierNext.addEventListener('click', () => scrollByPanel(1));
+
+		dossierViewport.addEventListener('keydown', (event) => {
+			if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+				event.preventDefault();
+				scrollByPanel(event.key === 'ArrowLeft' ? -1 : 1);
+			}
+		});
+
+		dossierViewport.addEventListener('pointerdown', (event) => {
+			if (event.pointerType === 'touch' || event.button !== 0) return;
+			dragging = true;
+			pointerStart = event.clientX;
+			scrollStart = dossierViewport.scrollLeft;
+			dossierViewport.classList.add('is-dragging');
+			dossierViewport.setPointerCapture(event.pointerId);
+		});
+
+		dossierViewport.addEventListener('pointermove', (event) => {
+			if (!dragging) return;
+			dossierViewport.scrollLeft = scrollStart - (event.clientX - pointerStart);
+		});
+
+		const stopDragging = (event: PointerEvent) => {
+			if (!dragging) return;
+			dragging = false;
+			dossierViewport.classList.remove('is-dragging');
+			if (dossierViewport.hasPointerCapture(event.pointerId)) {
+				dossierViewport.releasePointerCapture(event.pointerId);
+			}
+		};
+
+		dossierViewport.addEventListener('pointerup', stopDragging);
+		dossierViewport.addEventListener('pointercancel', stopDragging);
+		dossierViewport.addEventListener('scroll', updateDossierControls, { passive: true });
+		window.addEventListener('resize', updateDossierControls);
+		updateDossierControls();
 	}
 </script>
 
@@ -335,6 +495,25 @@ const navigation = [
 		border-bottom: 0;
 	}
 
+	.discipline-line {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px 10px;
+		width: min(760px, 100%);
+		padding-top: 12px;
+		color: var(--faint);
+		font-family: "SFMono-Regular", "Roboto Mono", "Liberation Mono", Consolas, monospace;
+		font-size: 10px;
+		line-height: 1.35;
+		letter-spacing: 0.045em;
+		text-transform: uppercase;
+	}
+
+	.discipline-line i {
+		color: var(--ink-local);
+		font-style: normal;
+	}
+
 	.identity-columns {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -433,29 +612,38 @@ const navigation = [
 		display: none;
 	}
 
-	.education-panel {
+	.cv-dossier {
 		display: grid;
-		width: min(64ch, 100%);
+		width: min(760px, 100%);
 		border-top: 1px solid var(--line);
-		font-size: 14px;
-		line-height: 1.56;
-		letter-spacing: 0.01em;
+		border-bottom: 1px solid var(--line);
+		font-size: 13px;
+		line-height: 1.52;
+		letter-spacing: 0.012em;
 	}
 
-	.education-panel section {
-		display: grid;
-		gap: 12px;
-		padding: 15px 0 18px;
+	.dossier-toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 38px;
+		padding: 6px 0;
 		border-bottom: 1px solid var(--line);
 	}
 
-	.education-panel section > div {
-		display: grid;
-		gap: 2px;
+	.dossier-toolbar > p {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px 16px;
+		color: var(--faint);
 	}
 
-	.education-panel h3,
-	.identity-toggle {
+	.dossier-toolbar,
+	.dossier-index,
+	.dossier-meta,
+	.dossier-list small,
+	.identity-toggle,
+	.contact-phone {
 		font-family: "SFMono-Regular", "Roboto Mono", "Liberation Mono", Consolas, monospace;
 		font-size: 10px;
 		line-height: 1.35;
@@ -463,9 +651,149 @@ const navigation = [
 		text-transform: uppercase;
 	}
 
-	.education-panel h3 {
+	.dossier-controls {
+		display: grid;
+		grid-template-columns: repeat(2, 32px);
+		border: 1px solid var(--line);
+	}
+
+	.dossier-controls button {
+		width: 32px;
+		height: 25px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--ink-local);
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.dossier-controls button + button {
+		border-left: 1px solid var(--line);
+	}
+
+	.dossier-controls button:hover,
+	.dossier-controls button:focus-visible {
+		background: var(--ink-local);
+		color: var(--field);
+		outline: none;
+	}
+
+	.dossier-controls button:disabled {
+		color: #aaa398;
+		cursor: default;
+	}
+
+	.dossier-controls button:disabled:hover {
+		background: transparent;
+	}
+
+	.dossier-viewport {
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x proximity;
+		scrollbar-width: thin;
+		scrollbar-color: var(--ink-local) transparent;
+		cursor: grab;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.dossier-viewport:focus-visible {
+		outline: 1px solid var(--link);
+		outline-offset: 4px;
+	}
+
+	.dossier-viewport.is-dragging {
+		cursor: grabbing;
+		user-select: none;
+	}
+
+	.dossier-track {
+		display: flex;
+		align-items: stretch;
+		width: max-content;
+	}
+
+	.dossier-card {
+		display: grid;
+		align-content: start;
+		gap: 22px;
+		width: clamp(280px, 46vw, 390px);
+		min-height: 405px;
+		padding: 18px 24px 26px 0;
+		scroll-snap-align: start;
+	}
+
+	.dossier-card + .dossier-card {
+		padding-left: 24px;
+		border-left: 1px solid var(--line);
+	}
+
+	.dossier-index,
+	.dossier-meta,
+	.dossier-list small {
 		color: var(--faint);
 		font-weight: 400;
+	}
+
+	.dossier-index {
+		color: var(--link);
+	}
+
+	.dossier-entry {
+		display: grid;
+		gap: 5px;
+	}
+
+	.dossier-entry--compact {
+		padding-top: 14px;
+		border-top: 1px solid var(--line);
+	}
+
+	.dossier-entry h3,
+	.dossier-list span {
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 1.28;
+		letter-spacing: 0.02em;
+	}
+
+	.dossier-list,
+	.keyword-cloud {
+		display: grid;
+		gap: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.dossier-list li {
+		display: grid;
+		gap: 5px;
+		padding: 12px 0 14px;
+		border-top: 1px solid var(--line);
+	}
+
+	.dossier-list--projects li:first-child {
+		padding-top: 0;
+		border-top: 0;
+	}
+
+	.dossier-list small {
+		display: block;
+		text-transform: none;
+	}
+
+	.keyword-cloud {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 7px;
+	}
+
+	.keyword-cloud li {
+		padding: 7px 8px;
+		border: 1px solid var(--line);
+		font-size: 11px;
+		line-height: 1.35;
 	}
 
 	.identity-toggle {
@@ -563,6 +891,10 @@ const navigation = [
 		.index-title {
 			transition: none;
 		}
+
+		.dossier-viewport {
+			scroll-behavior: auto;
+		}
 	}
 
 	.contact-grid {
@@ -577,6 +909,11 @@ const navigation = [
 		gap: 24px;
 	}
 
+	.contact-primary {
+		display: grid;
+		gap: 12px;
+	}
+
 	.contact-email {
 		color: var(--link);
 		font-size: clamp(17px, 2vw, 24px);
@@ -585,6 +922,12 @@ const navigation = [
 		text-decoration-thickness: 1px;
 		text-underline-offset: 5px;
 		text-transform: uppercase;
+	}
+
+	.contact-phone {
+		justify-self: start;
+		color: var(--faint);
+		text-decoration: none;
 	}
 
 	.cv-download {
@@ -598,6 +941,8 @@ const navigation = [
 
 	.contact-email:hover,
 	.contact-email:focus-visible,
+	.contact-phone:hover,
+	.contact-phone:focus-visible,
 	.cv-download:hover,
 	.cv-download:focus-visible {
 		color: var(--ink-local);
@@ -661,6 +1006,10 @@ const navigation = [
 		.contact-line {
 			display: grid;
 		}
+
+		.dossier-card {
+			width: min(70vw, 370px);
+		}
 	}
 
 	@media (max-width: 520px) {
@@ -712,6 +1061,29 @@ const navigation = [
 
 		.statement {
 			font-size: 18px;
+		}
+
+		.discipline-line {
+			gap: 4px 8px;
+			font-size: 9px;
+		}
+
+		.dossier-toolbar > p span:last-child {
+			display: none;
+		}
+
+		.dossier-card {
+			width: min(82vw, 330px);
+			min-height: 430px;
+			padding-right: 18px;
+		}
+
+		.dossier-card + .dossier-card {
+			padding-left: 18px;
+		}
+
+		.keyword-cloud {
+			grid-template-columns: 1fr;
 		}
 
 	}
