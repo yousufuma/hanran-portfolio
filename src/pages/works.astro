@@ -109,6 +109,28 @@ import { works } from '../data/works';
 								<h2>{work.title}</h2>
 							</div>
 
+							{
+								work.links && (
+									<nav class="work-links" aria-label={`${work.title} project links`}>
+										{work.links.map((link, linkIndex) => (
+											<a
+												class:list={['work-link', link.primary && 'is-primary']}
+												href={link.href}
+												target="_blank"
+												rel="noreferrer"
+											>
+												<span>{String(linkIndex + 1).padStart(2, '0')}</span>
+												<span class="work-link-copy">
+													<b>{link.label}</b>
+													<small>{link.note}</small>
+												</span>
+												<span aria-hidden="true">↗</span>
+											</a>
+										))}
+									</nav>
+								)
+							}
+
 							<dl class="work-data">
 								<div>
 									<dt>medium</dt>
@@ -135,6 +157,34 @@ import { works } from '../data/works';
 								</div>
 							</section>
 						</div>
+
+						{
+							work.details && (
+								<section class="work-details" aria-label={`${work.title} project detail`}>
+									<header class="work-details-heading">
+										<p>project notes</p>
+										<h3>Design proposition &amp; research context</h3>
+									</header>
+									{work.details.map((detail, detailIndex) => (
+										<section class="work-detail-row">
+											<div class="work-detail-label">
+												<span>{String(detailIndex + 1).padStart(2, '0')}</span>
+												<p>{detail.label}</p>
+											</div>
+											<div class="work-detail-copy">
+												<h4>{detail.title}</h4>
+												<p>{detail.body}</p>
+												{detail.items && (
+													<ul>
+														{detail.items.map((item) => <li>{item}</li>)}
+													</ul>
+												)}
+											</div>
+										</section>
+									))}
+								</section>
+							)
+						}
 					</article>
 				))
 			}
@@ -268,7 +318,10 @@ import { works } from '../data/works';
 	.carousel-controls,
 	dt,
 	.work-heading p,
-	.work-copy h3 {
+	.work-copy h3,
+	.work-link,
+	.work-details-heading p,
+	.work-detail-label {
 		font-family: "SFMono-Regular", "Roboto Mono", "Liberation Mono", Consolas, monospace;
 		font-size: 10px;
 		line-height: 1.35;
@@ -559,6 +612,64 @@ import { works } from '../data/works';
 		text-transform: uppercase;
 	}
 
+	.work-links {
+		display: grid;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.work-link {
+		display: grid;
+		grid-template-columns: 28px minmax(0, 1fr) auto;
+		gap: 12px;
+		align-items: center;
+		min-height: 64px;
+		padding: 10px 0;
+		border-bottom: 1px solid var(--line-local);
+		color: var(--link-local);
+		text-decoration: none;
+	}
+
+	.work-link:last-child {
+		border-bottom: 0;
+	}
+
+	.work-link.is-primary {
+		color: var(--ink-local);
+	}
+
+	.work-link-copy {
+		display: grid;
+		gap: 4px;
+	}
+
+	.work-link b,
+	.work-link small {
+		font: inherit;
+	}
+
+	.work-link b {
+		font-weight: 700;
+	}
+
+	.work-link small {
+		color: var(--muted-local);
+		text-transform: none;
+	}
+
+	.work-link:hover,
+	.work-link:focus-visible {
+		padding-right: 6px;
+		padding-left: 6px;
+		background: var(--ink-local);
+		color: var(--paper-local);
+		outline: none;
+	}
+
+	.work-link:hover small,
+	.work-link:focus-visible small {
+		color: var(--paper-local);
+	}
+
 	.work-data {
 		display: grid;
 		border-bottom: 1px solid var(--line-local);
@@ -606,6 +717,82 @@ import { works } from '../data/works';
 		font-size: clamp(14px, 1.28vw, 16px);
 		line-height: 1.76;
 		letter-spacing: 0.008em;
+	}
+
+	.work-details {
+		grid-column: 1 / -1;
+		margin-top: 26px;
+		border-top: 2px solid var(--line-local);
+	}
+
+	.work-details-heading,
+	.work-detail-row {
+		display: grid;
+		grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+		gap: 34px;
+	}
+
+	.work-details-heading {
+		align-items: end;
+		padding: 18px 0 22px;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.work-details-heading p,
+	.work-detail-label {
+		color: var(--muted-local);
+	}
+
+	.work-details-heading h3 {
+		max-width: 28ch;
+		font-size: clamp(19px, 2.2vw, 28px);
+		font-weight: 400;
+		line-height: 1.18;
+		letter-spacing: 0.025em;
+	}
+
+	.work-detail-row {
+		padding: 24px 0 30px;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.work-detail-label {
+		display: grid;
+		grid-template-columns: 30px minmax(0, 1fr);
+		gap: 14px;
+		align-content: start;
+	}
+
+	.work-detail-label span {
+		color: var(--ink-local);
+	}
+
+	.work-detail-copy {
+		display: grid;
+		gap: 14px;
+		max-width: 68ch;
+	}
+
+	.work-detail-copy h4 {
+		margin: 0;
+		font-size: clamp(17px, 1.65vw, 22px);
+		font-weight: 400;
+		line-height: 1.28;
+		letter-spacing: 0.015em;
+	}
+
+	.work-detail-copy > p,
+	.work-detail-copy li {
+		font-size: clamp(14px, 1.2vw, 16px);
+		line-height: 1.72;
+	}
+
+	.work-detail-copy ul {
+		display: grid;
+		gap: 7px;
+		margin: 2px 0 0;
+		padding: 14px 0 0 20px;
+		border-top: 1px solid var(--line-local);
 	}
 
 	.lightbox {
@@ -666,6 +853,10 @@ import { works } from '../data/works';
 			grid-template-columns: 1fr;
 			gap: 34px;
 		}
+
+		.work-details {
+			grid-column: 1;
+		}
 	}
 
 	@media (max-width: 560px) {
@@ -690,6 +881,12 @@ import { works } from '../data/works';
 		.work-data div {
 			grid-template-columns: 1fr;
 			gap: 4px;
+		}
+
+		.work-details-heading,
+		.work-detail-row {
+			grid-template-columns: 1fr;
+			gap: 16px;
 		}
 
 		.lightbox {

@@ -11,6 +11,20 @@ export type WorkVideo = {
 	orientation?: 'landscape' | 'portrait';
 };
 
+export type WorkLink = {
+	label: string;
+	href: string;
+	note: string;
+	primary?: boolean;
+};
+
+export type WorkDetail = {
+	label: string;
+	title: string;
+	body: string;
+	items?: string[];
+};
+
 export type Work = {
 	slug: string;
 	title: string;
@@ -24,6 +38,8 @@ export type Work = {
 	galleryMode?: 'grid' | 'carousel';
 	displayMode?: 'gallery' | 'video-gallery';
 	externalLink?: string;
+	links?: WorkLink[];
+	details?: WorkDetail[];
 	video?: WorkVideo;
 };
 
@@ -121,20 +137,65 @@ export const works: Work[] = [
 		slug: 'deaf-hard-of-hearing',
 		title: 'Interactive Design for Deaf and Hard-of-Hearing Audiences',
 		year: '2024-2025',
-		medium: 'Unity + external-device interactive system',
-		tools: ['Unity', 'sensors', 'visual feedback', 'external actuators'],
+		medium: 'Audio-reactive Unity research prototype / WebGL experience',
+		tools: ['Unity 2022.3 LTS', 'C#', 'WebGL'],
 		keywords: [
-			'multisensory interaction',
-			'sound visualization',
-			'accessibility',
-			'embodied perception',
+			'cross-modal translation',
+			'audience agency',
+			'accessibility-led design',
+			'real-time visual orchestration',
 		],
 		description:
-			'A Unity-based project exploring how musical structures can be translated into visual and tactile experiences for Deaf and hard-of-hearing audiences.',
+			'An audio-reactive research prototype exploring how musical structure and affect can be experienced through movement, space, light, colour, and form. Instead of adding accessibility after the experience is designed, the project uses access as the starting point for its interaction and audiovisual composition.',
 		researchRelevance:
-			'The project provides a technical foundation for input mapping, real-time visual response, multisensory interaction, and user perception.',
+			'This prototype is a precursor to my current research on game engines as technical platforms for hybrid interactive art. It tests how Unity can coordinate audience input, real-time visual orchestration, and a legible interaction grammar within one experiential system.',
 		displayMode: 'video-gallery',
 		externalLink: 'https://vimeo.com/1192306813',
+		links: [
+			{
+				label: 'Play on itch.io',
+				href: 'https://yousufuma.itch.io/dfmp',
+				note: 'Launch the browser experience',
+				primary: true,
+			},
+			{
+				label: 'View on GitHub',
+				href:
+					'https://github.com/yousufuma/Interactive-Design-for-Deaf-and-Hard-of-Hearing-Audiences',
+				note: 'Source code and technical documentation',
+			},
+		],
+		details: [
+			{
+				label: 'Design premise',
+				title: 'Accessibility as a way of composing the experience',
+				body:
+					'The project asks how an interactive system might communicate musical structure through multiple sensory channels without positioning sound as the only authoritative form of experience. It treats sound-to-image mapping as a spatial and relational design problem rather than as a conventional equaliser or a textual description of music.',
+			},
+			{
+				label: 'Audience agency',
+				title: 'The participant changes the audiovisual world',
+				body:
+					'The scene analyses music in real time and connects its changing qualities to animated creatures, procedural light, materials, and environmental movement. Participants can alter the source audio and immediately observe how the visual world reorganises around their actions.',
+				items: [
+					'Hold Space to activate and release the audiovisual response.',
+					'Use W and S to shift playback pitch and speed, changing the pace of movement.',
+					'Use A and D to filter different frequency ranges, producing contrasting spatial and visual states.',
+				],
+			},
+			{
+				label: 'Research connection',
+				title: 'A case study in real-time visual orchestration',
+				body:
+					'Within my wider research proposal, this work helps frame the game engine as more than a production tool. Unity becomes the platform that holds input, media behaviour, state changes, and visual feedback together. The prototype therefore contributes to my investigation of how interaction structure can remain perceptible to an audience while coordinating multiple media systems in real time.',
+			},
+			{
+				label: 'Current scope',
+				title: 'An exploratory proposition, not a universal solution',
+				body:
+					'The browser build currently concentrates on audiovisual translation; physical vibration and serial-device experiments are outside the WebGL version. The work does not claim that a particular visual quality is equivalent to a particular auditory experience. Future development requires co-design and structured evaluation with Deaf and hard-of-hearing participants, alongside adjustable contrast, motion, density, and tactile output.',
+			},
+		],
 		video: {
 			provider: 'vimeo',
 			embedUrl:
