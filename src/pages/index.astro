@@ -477,22 +477,21 @@ const navigation = [
 
 				const fieldHeight = Math.max(frame.offsetHeight, 160);
 				const unitCount = clamp(Math.round(fieldHeight / 34), 8, 18);
+				const verticalPattern = [22, 16, 11, 0, 8, 0, 0];
+				const dashThickness = randomBetween(2.1, 2.9);
+				const dotSize = randomBetween(3.4, 4.2);
 				const units = Array.from({ length: unitCount }, (_, unitIndex) => {
 					const unit = document.createElement('span');
-					const isDot = (unitIndex + edgeIndex + frameIndex) % 4 === 0;
+					const patternValue = verticalPattern[unitIndex % verticalPattern.length];
+					const isDot = patternValue === 0;
 					const ratio = (unitIndex + 0.5) / unitCount;
-					const dashWidths = [6, 10, 8, 12, 7];
-					const unitThickness = isDot
-						? randomBetween(2.3, 3.1)
-						: randomBetween(1.25, 1.95);
-					const baseWidth = isDot
-						? unitThickness
-						: dashWidths[(unitIndex + edgeIndex + frameIndex) % dashWidths.length];
+					const unitThickness = isDot ? dotSize : dashThickness;
+					const unitLength = isDot ? unitThickness : patternValue;
 
 					unit.className = `vertical-unit ${isDot ? 'vertical-unit--dot' : 'vertical-unit--dash'}`;
 					unit.style.top = `${(ratio * 100).toFixed(3)}%`;
-					unit.style.setProperty('--unit-width', `${baseWidth.toFixed(2)}px`);
 					unit.style.setProperty('--unit-thickness', `${unitThickness.toFixed(2)}px`);
+					unit.style.setProperty('--unit-length', `${unitLength.toFixed(2)}px`);
 					unit.style.opacity = '0.84';
 					element.append(unit);
 
@@ -501,7 +500,6 @@ const navigation = [
 						ratio,
 						isDot,
 						phase: (unitIndex + 1) * 1.618 + edgeIndex * 0.8 + frameIndex * 0.45,
-						x: 0,
 						y: 0,
 						scale: 1,
 					};
@@ -560,28 +558,25 @@ const navigation = [
 					const fieldIntensity = pointerActive
 						? clamp(1 - horizontalDistance / 70, 0, 1) ** 2
 						: 0;
-					const outwardDirection = field.edge === 'left' ? -1 : 1;
-
 					for (const unit of field.units) {
 						const unitY = rect.top + rect.height * unit.ratio;
 						const verticalDistance = Math.abs(pointerY - unitY);
 						const localIntensity =
 							fieldIntensity * clamp(1 - verticalDistance / 72, 0, 1) ** 2;
-						const targetX =
-							outwardDirection * (1 + Math.abs(Math.sin(unit.phase)) * 2.5) * localIntensity;
-						const targetY = Math.sin(unit.phase * 1.7) * 2.6 * localIntensity;
+						const targetY = Math.sin(unit.phase * 1.7) * 2.4 * localIntensity;
 						const targetScale = unit.isDot
-							? 1 + localIntensity * 0.22
-							: 1 + Math.cos(unit.phase) * 0.18 * localIntensity;
+							? 1 + localIntensity * 0.12
+							: 1 + Math.cos(unit.phase) * 0.14 * localIntensity;
 
-						unit.x += (targetX - unit.x) * 0.13;
 						unit.y += (targetY - unit.y) * 0.13;
 						unit.scale += (targetScale - unit.scale) * 0.13;
 						stillMoving ||=
-							Math.abs(targetX - unit.x) > 0.03 ||
 							Math.abs(targetY - unit.y) > 0.03 ||
 							Math.abs(targetScale - unit.scale) > 0.002;
-						unit.element.style.transform = `translate3d(${unit.x}px, calc(-50% + ${unit.y}px), 0) scaleX(${unit.scale})`;
+						const scaleTransform = unit.isDot
+							? `scale(${unit.scale})`
+							: `scaleY(${unit.scale})`;
+						unit.element.style.transform = `translate3d(0, calc(-50% + ${unit.y}px), 0) ${scaleTransform}`;
 					}
 				}
 			}
@@ -638,59 +633,14 @@ const navigation = [
 	}
 
 	.line-frame {
-		--frame-top-left: -18px;
-		--frame-top-right: 4%;
-		--frame-bottom-left: 5%;
-		--frame-bottom-right: -26px;
-		--frame-side-top: 12px;
-		--frame-side-bottom: -14px;
+		--frame-top-left: 0;
+		--frame-top-right: 0;
+		--frame-bottom-left: 0;
+		--frame-bottom-right: 0;
+		--frame-side-top: 0;
+		--frame-side-bottom: 0;
 		position: relative;
 		isolation: isolate;
-	}
-
-	.line-frame[data-frame-variant="hero"] {
-		--frame-top-left: -28px;
-		--frame-top-right: 7%;
-		--frame-bottom-left: 11%;
-		--frame-bottom-right: -42px;
-		--frame-side-top: 18px;
-		--frame-side-bottom: -16px;
-	}
-
-	.line-frame[data-frame-variant="statement"] {
-		--frame-top-left: -34px;
-		--frame-top-right: -14px;
-		--frame-bottom-left: 8%;
-		--frame-bottom-right: -54px;
-		--frame-side-top: 22px;
-		--frame-side-bottom: -18px;
-	}
-
-	.line-frame[data-frame-variant="direction"] {
-		--frame-top-left: 7%;
-		--frame-top-right: -52px;
-		--frame-bottom-left: -22px;
-		--frame-bottom-right: 12%;
-		--frame-side-top: -16px;
-		--frame-side-bottom: 24px;
-	}
-
-	.line-frame[data-frame-variant="register"] {
-		--frame-top-left: -48px;
-		--frame-top-right: 10%;
-		--frame-bottom-left: 14%;
-		--frame-bottom-right: -18px;
-		--frame-side-top: 14px;
-		--frame-side-bottom: -22px;
-	}
-
-	.line-frame[data-frame-variant="contact"] {
-		--frame-top-left: 10%;
-		--frame-top-right: -38px;
-		--frame-bottom-left: -26px;
-		--frame-bottom-right: 5%;
-		--frame-side-top: -12px;
-		--frame-side-bottom: 18px;
 	}
 
 	.line-frame > :not(.reactive-frame-lines) {
@@ -751,11 +701,12 @@ const navigation = [
 		position: absolute;
 		left: 50%;
 		display: block;
-		width: var(--unit-width, 8px);
-		height: var(--unit-thickness, 1px);
-		margin-left: calc(var(--unit-width, 8px) * -0.5);
+		width: var(--unit-thickness, 2.4px);
+		height: var(--unit-length, 12px);
+		margin-left: calc(var(--unit-thickness, 2.4px) * -0.5);
 		background: color-mix(in srgb, var(--line) 88%, transparent);
-		transform: translate3d(0, -50%, 0) scaleX(1);
+		border-radius: 999px;
+		transform: translate3d(0, -50%, 0) scaleY(1);
 		transform-origin: center;
 		will-change: transform;
 	}
@@ -806,7 +757,7 @@ const navigation = [
 	}
 
 	.identity-card {
-		width: min(1100px, 90%);
+		width: 100%;
 	}
 
 	.identity-rule {
@@ -838,7 +789,7 @@ const navigation = [
 		display: flex;
 		flex-wrap: wrap;
 		gap: 5px 10px;
-		width: min(1100px, 90%);
+		width: 100%;
 		padding-top: 12px;
 		color: var(--faint);
 		font-family: var(--font-mono);
@@ -936,7 +887,7 @@ const navigation = [
 	.statement {
 		display: grid;
 		gap: 20px;
-		width: min(1080px, 88%);
+		width: 100%;
 		max-width: none;
 		margin: 10px 0 4px;
 		padding: 34px 38px 30px;
@@ -1159,7 +1110,7 @@ const navigation = [
 
 	.direction-copy {
 		display: grid;
-		width: min(900px, 74%);
+		width: 100%;
 		padding: 18px 32px 14px;
 	}
 
@@ -1173,7 +1124,7 @@ const navigation = [
 
 	.index-list {
 		display: grid;
-		width: min(1280px, 100%);
+		width: 100%;
 		padding: 16px 28px 18px;
 	}
 
@@ -1249,7 +1200,7 @@ const navigation = [
 		align-items: baseline;
 		justify-content: space-between;
 		gap: 24px;
-		width: min(1040px, 84%);
+		width: 100%;
 		margin: 8px 0;
 		padding: 26px 32px;
 	}
