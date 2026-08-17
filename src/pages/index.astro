@@ -453,29 +453,74 @@ const navigation = [
 	const reactiveFrames = document.querySelectorAll<HTMLElement>('[data-reactive-frame]');
 	const reduceFrameMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 	const finePointer = window.matchMedia('(pointer: fine)');
+	const clamp = (value: number, minimum: number, maximum: number) =>
+		Math.min(maximum, Math.max(minimum, value));
+	const randomBetween = (minimum: number, maximum: number) =>
+		minimum + Math.random() * (maximum - minimum);
 
-	if (reactiveFrames.length && finePointer.matches && !reduceFrameMotion.matches) {
-		const edges = ['top', 'right', 'bottom', 'left'] as const;
-		const frameStates = Array.from(reactiveFrames).map((frame) => ({
-			frame,
-			lines: edges
-				.map((edge) => ({
-					edge,
-					element: frame.querySelector<HTMLElement>(`[data-frame-line="${edge}"]`),
-					x: 0,
-					y: 0,
-					scale: 1,
-				}))
-				.filter((line) => line.element),
-		}));
+	const frameStates = Array.from(reactiveFrames).map((frame, frameIndex) => {
+		const horizontalLines = (['top', 'bottom'] as const)
+			.map((edge) => {
+				const element = frame.querySelector<HTMLElement>(`[data-frame-line="${edge}"]`);
+				if (!element) return null;
+
+				const baseScale = randomBetween(0.91, 0.995);
+				element.style.setProperty('--line-thickness', `${randomBetween(0.8, 1.45).toFixed(2)}px`);
+				element.style.transformOrigin = Math.random() > 0.5 ? 'left center' : 'right center';
+				element.style.transform = `translate3d(0, 0, 0) scaleX(${baseScale})`;
+
+				return { edge, element, y: 0, scale: baseScale, baseScale };
+			})
+			.filter((line): line is NonNullable<typeof line> => Boolean(line));
+
+		const verticalFields = (['left', 'right'] as const)
+			.map((edge, edgeIndex) => {
+				const element = frame.querySelector<HTMLElement>(`[data-frame-line="${edge}"]`);
+				if (!element) return null;
+
+				const fieldHeight = Math.max(frame.offsetHeight, 160);
+				const unitCount = clamp(Math.round(fieldHeight / 34), 8, 18);
+				const units = Array.from({ length: unitCount }, (_, unitIndex) => {
+					const unit = document.createElement('span');
+					const isDot = (unitIndex + edgeIndex + frameIndex) % 4 === 0 || Math.random() < 0.22;
+					const ratio = clamp(
+						(unitIndex + randomBetween(0.2, 0.8)) / unitCount,
+						0.025,
+						0.975,
+					);
+					const baseWidth = isDot ? randomBetween(1.5, 2.4) : randomBetween(5, 13);
+
+					unit.className = `vertical-unit ${isDot ? 'vertical-unit--dot' : 'vertical-unit--dash'}`;
+					unit.style.top = `${(ratio * 100).toFixed(3)}%`;
+					unit.style.setProperty('--unit-width', `${baseWidth.toFixed(2)}px`);
+					unit.style.setProperty('--unit-thickness', `${randomBetween(0.8, 1.4).toFixed(2)}px`);
+					unit.style.opacity = randomBetween(0.55, 0.88).toFixed(2);
+					element.append(unit);
+
+					return {
+						element: unit,
+						ratio,
+						isDot,
+						phase: randomBetween(0, Math.PI * 2),
+						x: 0,
+						y: 0,
+						scale: 1,
+					};
+				});
+
+				return { edge, element, units };
+			})
+			.filter((field): field is NonNullable<typeof field> => Boolean(field));
+
+		return { frame, horizontalLines, verticalFields };
+	});
+
+	if (frameStates.length && finePointer.matches && !reduceFrameMotion.matches) {
 
 		let pointerX = -1000;
 		let pointerY = -1000;
 		let pointerActive = false;
 		let animationFrame = 0;
-
-		const clamp = (value: number, minimum: number, maximum: number) =>
-			Math.min(maximum, Math.max(minimum, value));
 
 		const scheduleFrameMotion = () => {
 			if (!animationFrame) animationFrame = requestAnimationFrame(renderFrameMotion);
@@ -487,67 +532,63 @@ const navigation = [
 
 			for (const state of frameStates) {
 				const rect = state.frame.getBoundingClientRect();
-				const variant = state.frame.dataset.frameVariant;
-				const maximumShift =
-					variant === 'statement' ? 36 : variant === 'contact' ? 32 : variant === 'hero' ? 30 : 26;
-				const influence = variant === 'register' ? 175 : 150;
 
-				for (const line of state.lines) {
-					let targetX = 0;
+				for (const line of state.horizontalLines) {
 					let targetY = 0;
-					let targetScale = 1;
+					let targetScale = line.baseScale;
 
 					if (pointerActive) {
-						const horizontal = line.edge === 'top' || line.edge === 'bottom';
-						const edgePosition = horizontal
-							? line.edge === 'top'
-								? rect.top
-								: rect.bottom
-							: line.edge === 'left'
-								? rect.left
-								: rect.right;
-						const pointerNormal = horizontal ? pointerY : pointerX;
-						const pointerTangent = horizontal ? pointerX : pointerY;
-						const tangentStart = horizontal ? rect.left : rect.top;
-						const tangentEnd = horizontal ? rect.right : rect.bottom;
+						const edgePosition = line.edge === 'top' ? rect.top : rect.bottom;
 						const tangentGap =
-							pointerTangent < tangentStart
-								? tangentStart - pointerTangent
-								: pointerTangent > tangentEnd
-									? pointerTangent - tangentEnd
+							pointerX < rect.left
+								? rect.left - pointerX
+								: pointerX > rect.right
+									? pointerX - rect.right
 									: 0;
-						const signedDistance = pointerNormal - edgePosition;
-						const distance = Math.hypot(signedDistance, tangentGap * 0.7);
-						const intensity = clamp(1 - distance / influence, 0, 1) ** 2;
-						const normalShift = (signedDistance >= 0 ? -1 : 1) * maximumShift * intensity;
-						const tangentCentre = (tangentStart + tangentEnd) / 2;
-						const tangentHalf = Math.max((tangentEnd - tangentStart) / 2, 1);
-						const tangentShift =
-							clamp((tangentCentre - pointerTangent) / tangentHalf, -1, 1) * 13 * intensity;
-
-						if (horizontal) {
-							targetX = tangentShift;
-							targetY = normalShift;
-						} else {
-							targetX = normalShift;
-							targetY = tangentShift;
-						}
-						targetScale = 1 - intensity * 0.075;
+						const signedDistance = pointerY - edgePosition;
+						const distance = Math.hypot(signedDistance, tangentGap * 0.8);
+						const intensity = clamp(1 - distance / 105, 0, 1) ** 2;
+						targetY = (signedDistance >= 0 ? -1 : 1) * 5.5 * intensity;
+						targetScale = line.baseScale * (1 - intensity * 0.012);
 					}
 
-					line.x += (targetX - line.x) * 0.18;
-					line.y += (targetY - line.y) * 0.18;
-					line.scale += (targetScale - line.scale) * 0.18;
+					line.y += (targetY - line.y) * 0.14;
+					line.scale += (targetScale - line.scale) * 0.14;
 					stillMoving ||=
-						Math.abs(targetX - line.x) > 0.04 ||
 						Math.abs(targetY - line.y) > 0.04 ||
 						Math.abs(targetScale - line.scale) > 0.001;
+					line.element.style.transform = `translate3d(0, ${line.y}px, 0) scaleX(${line.scale})`;
+				}
 
-					const scaleTransform =
-						line.edge === 'top' || line.edge === 'bottom'
-							? `scaleX(${line.scale})`
-							: `scaleY(${line.scale})`;
-					line.element!.style.transform = `translate3d(${line.x}px, ${line.y}px, 0) ${scaleTransform}`;
+				for (const field of state.verticalFields) {
+					const edgeX = field.edge === 'left' ? rect.left : rect.right;
+					const horizontalDistance = Math.abs(pointerX - edgeX);
+					const fieldIntensity = pointerActive
+						? clamp(1 - horizontalDistance / 82, 0, 1) ** 2
+						: 0;
+					const outwardDirection = field.edge === 'left' ? -1 : 1;
+
+					for (const unit of field.units) {
+						const unitY = rect.top + rect.height * unit.ratio;
+						const verticalDistance = Math.abs(pointerY - unitY);
+						const localIntensity =
+							fieldIntensity * clamp(1 - verticalDistance / 86, 0, 1) ** 2;
+						const targetX =
+							outwardDirection * (1.4 + Math.abs(Math.sin(unit.phase)) * 4.2) * localIntensity;
+						const targetY = Math.sin(unit.phase * 1.7) * 4.5 * localIntensity;
+						const targetScale = unit.isDot
+							? 1 + localIntensity * 0.45
+							: 1 + Math.cos(unit.phase) * 0.32 * localIntensity;
+
+						unit.x += (targetX - unit.x) * 0.16;
+						unit.y += (targetY - unit.y) * 0.16;
+						unit.scale += (targetScale - unit.scale) * 0.16;
+						stillMoving ||=
+							Math.abs(targetX - unit.x) > 0.03 ||
+							Math.abs(targetY - unit.y) > 0.03 ||
+							Math.abs(targetScale - unit.scale) > 0.002;
+						unit.element.style.transform = `translate3d(${unit.x}px, calc(-50% + ${unit.y}px), 0) scaleX(${unit.scale})`;
+					}
 				}
 			}
 
@@ -610,6 +651,7 @@ const navigation = [
 		--frame-side-top: 12px;
 		--frame-side-bottom: -14px;
 		position: relative;
+		isolation: isolate;
 	}
 
 	.line-frame[data-frame-variant="hero"] {
@@ -665,7 +707,7 @@ const navigation = [
 	.reactive-frame-lines {
 		position: absolute;
 		inset: 0;
-		z-index: 2;
+		z-index: 0;
 		display: block;
 		pointer-events: none;
 	}
@@ -673,15 +715,14 @@ const navigation = [
 	.frame-line {
 		position: absolute;
 		display: block;
-		background: color-mix(in srgb, var(--line) 76%, transparent);
-		transform: translate3d(0, 0, 0);
-		transform-origin: center;
-		will-change: transform;
 	}
 
 	.frame-line--top,
 	.frame-line--bottom {
-		height: 1px;
+		height: var(--line-thickness, 1px);
+		background: color-mix(in srgb, var(--line) 76%, transparent);
+		transform: translate3d(0, 0, 0) scaleX(1);
+		will-change: transform;
 	}
 
 	.frame-line--top {
@@ -700,20 +741,33 @@ const navigation = [
 	.frame-line--right {
 		top: var(--frame-side-top);
 		bottom: var(--frame-side-bottom);
-		width: 1px;
+		width: 16px;
+		overflow: visible;
 	}
 
 	.frame-line--left {
-		left: 0;
+		left: -8px;
 	}
 
 	.frame-line--right {
-		right: 0;
+		right: -8px;
 	}
 
-	.line-frame[data-frame-variant="hero"] .frame-line--top,
-	.line-frame[data-frame-variant="register"] .frame-line--top {
-		height: 2px;
+	.vertical-unit {
+		position: absolute;
+		left: 50%;
+		display: block;
+		width: var(--unit-width, 8px);
+		height: var(--unit-thickness, 1px);
+		margin-left: calc(var(--unit-width, 8px) * -0.5);
+		background: var(--line);
+		transform: translate3d(0, -50%, 0) scaleX(1);
+		transform-origin: center;
+		will-change: transform;
+	}
+
+	.vertical-unit--dot {
+		border-radius: 50%;
 	}
 
 	.margin-note,
