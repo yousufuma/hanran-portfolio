@@ -464,12 +464,9 @@ const navigation = [
 				const element = frame.querySelector<HTMLElement>(`[data-frame-line="${edge}"]`);
 				if (!element) return null;
 
-				const baseScale = randomBetween(0.91, 0.995);
-				element.style.setProperty('--line-thickness', `${randomBetween(0.8, 1.45).toFixed(2)}px`);
-				element.style.transformOrigin = Math.random() > 0.5 ? 'left center' : 'right center';
-				element.style.transform = `translate3d(0, 0, 0) scaleX(${baseScale})`;
+				element.style.setProperty('--line-thickness', `${randomBetween(1.35, 2.15).toFixed(2)}px`);
 
-				return { edge, element, y: 0, scale: baseScale, baseScale };
+				return { edge, element, y: 0 };
 			})
 			.filter((line): line is NonNullable<typeof line> => Boolean(line));
 
@@ -482,26 +479,28 @@ const navigation = [
 				const unitCount = clamp(Math.round(fieldHeight / 34), 8, 18);
 				const units = Array.from({ length: unitCount }, (_, unitIndex) => {
 					const unit = document.createElement('span');
-					const isDot = (unitIndex + edgeIndex + frameIndex) % 4 === 0 || Math.random() < 0.22;
-					const ratio = clamp(
-						(unitIndex + randomBetween(0.2, 0.8)) / unitCount,
-						0.025,
-						0.975,
-					);
-					const baseWidth = isDot ? randomBetween(1.5, 2.4) : randomBetween(5, 13);
+					const isDot = (unitIndex + edgeIndex + frameIndex) % 4 === 0;
+					const ratio = (unitIndex + 0.5) / unitCount;
+					const dashWidths = [6, 10, 8, 12, 7];
+					const unitThickness = isDot
+						? randomBetween(2.3, 3.1)
+						: randomBetween(1.25, 1.95);
+					const baseWidth = isDot
+						? unitThickness
+						: dashWidths[(unitIndex + edgeIndex + frameIndex) % dashWidths.length];
 
 					unit.className = `vertical-unit ${isDot ? 'vertical-unit--dot' : 'vertical-unit--dash'}`;
 					unit.style.top = `${(ratio * 100).toFixed(3)}%`;
 					unit.style.setProperty('--unit-width', `${baseWidth.toFixed(2)}px`);
-					unit.style.setProperty('--unit-thickness', `${randomBetween(0.8, 1.4).toFixed(2)}px`);
-					unit.style.opacity = randomBetween(0.55, 0.88).toFixed(2);
+					unit.style.setProperty('--unit-thickness', `${unitThickness.toFixed(2)}px`);
+					unit.style.opacity = '0.84';
 					element.append(unit);
 
 					return {
 						element: unit,
 						ratio,
 						isDot,
-						phase: randomBetween(0, Math.PI * 2),
+						phase: (unitIndex + 1) * 1.618 + edgeIndex * 0.8 + frameIndex * 0.45,
 						x: 0,
 						y: 0,
 						scale: 1,
@@ -535,7 +534,6 @@ const navigation = [
 
 				for (const line of state.horizontalLines) {
 					let targetY = 0;
-					let targetScale = line.baseScale;
 
 					if (pointerActive) {
 						const edgePosition = line.edge === 'top' ? rect.top : rect.bottom;
@@ -547,24 +545,20 @@ const navigation = [
 									: 0;
 						const signedDistance = pointerY - edgePosition;
 						const distance = Math.hypot(signedDistance, tangentGap * 0.8);
-						const intensity = clamp(1 - distance / 105, 0, 1) ** 2;
-						targetY = (signedDistance >= 0 ? -1 : 1) * 5.5 * intensity;
-						targetScale = line.baseScale * (1 - intensity * 0.012);
+						const intensity = clamp(1 - distance / 92, 0, 1) ** 2;
+						targetY = (signedDistance >= 0 ? -1 : 1) * 4 * intensity;
 					}
 
-					line.y += (targetY - line.y) * 0.14;
-					line.scale += (targetScale - line.scale) * 0.14;
-					stillMoving ||=
-						Math.abs(targetY - line.y) > 0.04 ||
-						Math.abs(targetScale - line.scale) > 0.001;
-					line.element.style.transform = `translate3d(0, ${line.y}px, 0) scaleX(${line.scale})`;
+					line.y += (targetY - line.y) * 0.12;
+					stillMoving ||= Math.abs(targetY - line.y) > 0.04;
+					line.element.style.transform = `translate3d(0, ${line.y}px, 0)`;
 				}
 
 				for (const field of state.verticalFields) {
 					const edgeX = field.edge === 'left' ? rect.left : rect.right;
 					const horizontalDistance = Math.abs(pointerX - edgeX);
 					const fieldIntensity = pointerActive
-						? clamp(1 - horizontalDistance / 82, 0, 1) ** 2
+						? clamp(1 - horizontalDistance / 70, 0, 1) ** 2
 						: 0;
 					const outwardDirection = field.edge === 'left' ? -1 : 1;
 
@@ -572,17 +566,17 @@ const navigation = [
 						const unitY = rect.top + rect.height * unit.ratio;
 						const verticalDistance = Math.abs(pointerY - unitY);
 						const localIntensity =
-							fieldIntensity * clamp(1 - verticalDistance / 86, 0, 1) ** 2;
+							fieldIntensity * clamp(1 - verticalDistance / 72, 0, 1) ** 2;
 						const targetX =
-							outwardDirection * (1.4 + Math.abs(Math.sin(unit.phase)) * 4.2) * localIntensity;
-						const targetY = Math.sin(unit.phase * 1.7) * 4.5 * localIntensity;
+							outwardDirection * (1 + Math.abs(Math.sin(unit.phase)) * 2.5) * localIntensity;
+						const targetY = Math.sin(unit.phase * 1.7) * 2.6 * localIntensity;
 						const targetScale = unit.isDot
-							? 1 + localIntensity * 0.45
-							: 1 + Math.cos(unit.phase) * 0.32 * localIntensity;
+							? 1 + localIntensity * 0.22
+							: 1 + Math.cos(unit.phase) * 0.18 * localIntensity;
 
-						unit.x += (targetX - unit.x) * 0.16;
-						unit.y += (targetY - unit.y) * 0.16;
-						unit.scale += (targetScale - unit.scale) * 0.16;
+						unit.x += (targetX - unit.x) * 0.13;
+						unit.y += (targetY - unit.y) * 0.13;
+						unit.scale += (targetScale - unit.scale) * 0.13;
 						stillMoving ||=
 							Math.abs(targetX - unit.x) > 0.03 ||
 							Math.abs(targetY - unit.y) > 0.03 ||
@@ -720,8 +714,8 @@ const navigation = [
 	.frame-line--top,
 	.frame-line--bottom {
 		height: var(--line-thickness, 1px);
-		background: color-mix(in srgb, var(--line) 76%, transparent);
-		transform: translate3d(0, 0, 0) scaleX(1);
+		background: color-mix(in srgb, var(--line) 88%, transparent);
+		transform: translate3d(0, 0, 0);
 		will-change: transform;
 	}
 
@@ -753,20 +747,20 @@ const navigation = [
 		right: -8px;
 	}
 
-	.vertical-unit {
+	:global(.vertical-unit) {
 		position: absolute;
 		left: 50%;
 		display: block;
 		width: var(--unit-width, 8px);
 		height: var(--unit-thickness, 1px);
 		margin-left: calc(var(--unit-width, 8px) * -0.5);
-		background: var(--line);
+		background: color-mix(in srgb, var(--line) 88%, transparent);
 		transform: translate3d(0, -50%, 0) scaleX(1);
 		transform-origin: center;
 		will-change: transform;
 	}
 
-	.vertical-unit--dot {
+	:global(.vertical-unit--dot) {
 		border-radius: 50%;
 	}
 
