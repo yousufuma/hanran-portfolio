@@ -476,8 +476,8 @@ const navigation = [
 				if (!element) return null;
 
 				const fieldHeight = Math.max(frame.offsetHeight, 160);
-				const unitCount = clamp(Math.round(fieldHeight / 34), 8, 18);
-				const verticalPattern = [22, 16, 11, 0, 8, 0, 0];
+				const unitCount = clamp(Math.round(fieldHeight / 20), 12, 30);
+				const verticalPattern = [13, 10, 7, 0, 6, 0, 0];
 				const dashThickness = randomBetween(2.1, 2.9);
 				const dotSize = randomBetween(3.4, 4.2);
 				const units = Array.from({ length: unitCount }, (_, unitIndex) => {
@@ -556,20 +556,24 @@ const navigation = [
 					const edgeX = field.edge === 'left' ? rect.left : rect.right;
 					const horizontalDistance = Math.abs(pointerX - edgeX);
 					const fieldIntensity = pointerActive
-						? clamp(1 - horizontalDistance / 70, 0, 1) ** 2
+						? clamp(1 - horizontalDistance / 64, 0, 1) ** 2
 						: 0;
 					for (const unit of field.units) {
 						const unitY = rect.top + rect.height * unit.ratio;
+						const relativeToPointer = pointerY - unitY;
 						const verticalDistance = Math.abs(pointerY - unitY);
-						const localIntensity =
-							fieldIntensity * clamp(1 - verticalDistance / 72, 0, 1) ** 2;
-						const targetY = Math.sin(unit.phase * 1.7) * 2.4 * localIntensity;
+						const verticalProximity = clamp(1 - verticalDistance / 108, 0, 1);
+						const localIntensity = fieldIntensity * verticalProximity ** 2;
+						const gather = clamp(relativeToPointer, -36, 36) * 0.12 * localIntensity;
+						const ripple =
+							Math.sin(unit.phase + pointerY * 0.035) * 1.8 * localIntensity;
+						const targetY = gather + ripple;
 						const targetScale = unit.isDot
-							? 1 + localIntensity * 0.12
-							: 1 + Math.cos(unit.phase) * 0.14 * localIntensity;
+							? 1 + localIntensity * 0.26
+							: 1 - localIntensity * 0.18 + Math.cos(unit.phase) * 0.05 * localIntensity;
 
-						unit.y += (targetY - unit.y) * 0.13;
-						unit.scale += (targetScale - unit.scale) * 0.13;
+						unit.y += (targetY - unit.y) * 0.16;
+						unit.scale += (targetScale - unit.scale) * 0.16;
 						stillMoving ||=
 							Math.abs(targetY - unit.y) > 0.03 ||
 							Math.abs(targetScale - unit.scale) > 0.002;
