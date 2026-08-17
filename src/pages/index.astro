@@ -64,7 +64,18 @@ const navigation = [
 			</aside>
 
 			<div class="name-block">
-				<section class="identity-card" aria-label="Artist identity card">
+				<section
+					class="identity-card line-frame"
+					aria-label="Artist identity card"
+					data-reactive-frame
+					data-frame-variant="hero"
+				>
+					<span class="reactive-frame-lines" aria-hidden="true">
+						<i class="frame-line frame-line--top" data-frame-line="top"></i>
+						<i class="frame-line frame-line--right" data-frame-line="right"></i>
+						<i class="frame-line frame-line--bottom" data-frame-line="bottom"></i>
+						<i class="frame-line frame-line--left" data-frame-line="left"></i>
+					</span>
 					<div class="identity-rule identity-rule-top" aria-hidden="true">
 						<span></span>
 						<span></span>
@@ -105,7 +116,19 @@ const navigation = [
 				<span>01</span>
 				<h2 id="identity-title" data-identity-title>Identity Statement</h2>
 			</div>
-			<div id="identity-content" class="statement" data-identity-region>
+			<div
+				id="identity-content"
+				class="statement line-frame"
+				data-identity-region
+				data-reactive-frame
+				data-frame-variant="statement"
+			>
+				<span class="reactive-frame-lines" aria-hidden="true">
+					<i class="frame-line frame-line--top" data-frame-line="top"></i>
+					<i class="frame-line frame-line--right" data-frame-line="right"></i>
+					<i class="frame-line frame-line--bottom" data-frame-line="bottom"></i>
+					<i class="frame-line frame-line--left" data-frame-line="left"></i>
+				</span>
 				<div class="identity-panel identity-panel--statement" data-identity-panel="statement">
 					<p>Independent media artist and researcher. Former Lecturer in Digital Media Technology.</p>
 					<p>
@@ -257,7 +280,17 @@ const navigation = [
 				<span>02</span>
 				<h2 id="direction-title">Research and Artistic Direction</h2>
 			</div>
-			<div class="direction-copy">
+			<div
+				class="direction-copy line-frame"
+				data-reactive-frame
+				data-frame-variant="direction"
+			>
+				<span class="reactive-frame-lines" aria-hidden="true">
+					<i class="frame-line frame-line--top" data-frame-line="top"></i>
+					<i class="frame-line frame-line--right" data-frame-line="right"></i>
+					<i class="frame-line frame-line--bottom" data-frame-line="bottom"></i>
+					<i class="frame-line frame-line--left" data-frame-line="left"></i>
+				</span>
 				{directions.map((direction) => <p>{direction}</p>)}
 			</div>
 		</section>
@@ -267,7 +300,18 @@ const navigation = [
 				<span>03</span>
 				<h2 id="register-title">Register Entries</h2>
 			</div>
-			<nav class="index-list" aria-label="Primary sections">
+			<nav
+				class="index-list line-frame"
+				aria-label="Primary sections"
+				data-reactive-frame
+				data-frame-variant="register"
+			>
+				<span class="reactive-frame-lines" aria-hidden="true">
+					<i class="frame-line frame-line--top" data-frame-line="top"></i>
+					<i class="frame-line frame-line--right" data-frame-line="right"></i>
+					<i class="frame-line frame-line--bottom" data-frame-line="bottom"></i>
+					<i class="frame-line frame-line--left" data-frame-line="left"></i>
+				</span>
 				{
 					navigation.map((item, index) => (
 						<a href={item.href} target={item.target} rel={item.rel} data-state="pending">
@@ -286,7 +330,17 @@ const navigation = [
 				<span>04</span>
 				<h2 id="contact-title">Contact</h2>
 			</div>
-			<div class="contact-line">
+			<div
+				class="contact-line line-frame"
+				data-reactive-frame
+				data-frame-variant="contact"
+			>
+				<span class="reactive-frame-lines" aria-hidden="true">
+					<i class="frame-line frame-line--top" data-frame-line="top"></i>
+					<i class="frame-line frame-line--right" data-frame-line="right"></i>
+					<i class="frame-line frame-line--bottom" data-frame-line="bottom"></i>
+					<i class="frame-line frame-line--left" data-frame-line="left"></i>
+				</span>
 				<div class="contact-primary">
 					<a class="contact-email" href="mailto:youcometwice@gmail.com">youcometwice@gmail.com</a>
 					<a class="contact-phone" href="tel:+8618323072776">+86 183 2307 2776</a>
@@ -395,6 +449,131 @@ const navigation = [
 		window.addEventListener('resize', updateDossierControls);
 		updateDossierControls();
 	}
+
+	const reactiveFrames = document.querySelectorAll<HTMLElement>('[data-reactive-frame]');
+	const reduceFrameMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+	const finePointer = window.matchMedia('(pointer: fine)');
+
+	if (reactiveFrames.length && finePointer.matches && !reduceFrameMotion.matches) {
+		const edges = ['top', 'right', 'bottom', 'left'] as const;
+		const frameStates = Array.from(reactiveFrames).map((frame) => ({
+			frame,
+			lines: edges
+				.map((edge) => ({
+					edge,
+					element: frame.querySelector<HTMLElement>(`[data-frame-line="${edge}"]`),
+					x: 0,
+					y: 0,
+					scale: 1,
+				}))
+				.filter((line) => line.element),
+		}));
+
+		let pointerX = -1000;
+		let pointerY = -1000;
+		let pointerActive = false;
+		let animationFrame = 0;
+
+		const clamp = (value: number, minimum: number, maximum: number) =>
+			Math.min(maximum, Math.max(minimum, value));
+
+		const scheduleFrameMotion = () => {
+			if (!animationFrame) animationFrame = requestAnimationFrame(renderFrameMotion);
+		};
+
+		const renderFrameMotion = () => {
+			animationFrame = 0;
+			let stillMoving = false;
+
+			for (const state of frameStates) {
+				const rect = state.frame.getBoundingClientRect();
+				const variant = state.frame.dataset.frameVariant;
+				const maximumShift =
+					variant === 'statement' ? 36 : variant === 'contact' ? 32 : variant === 'hero' ? 30 : 26;
+				const influence = variant === 'register' ? 175 : 150;
+
+				for (const line of state.lines) {
+					let targetX = 0;
+					let targetY = 0;
+					let targetScale = 1;
+
+					if (pointerActive) {
+						const horizontal = line.edge === 'top' || line.edge === 'bottom';
+						const edgePosition = horizontal
+							? line.edge === 'top'
+								? rect.top
+								: rect.bottom
+							: line.edge === 'left'
+								? rect.left
+								: rect.right;
+						const pointerNormal = horizontal ? pointerY : pointerX;
+						const pointerTangent = horizontal ? pointerX : pointerY;
+						const tangentStart = horizontal ? rect.left : rect.top;
+						const tangentEnd = horizontal ? rect.right : rect.bottom;
+						const tangentGap =
+							pointerTangent < tangentStart
+								? tangentStart - pointerTangent
+								: pointerTangent > tangentEnd
+									? pointerTangent - tangentEnd
+									: 0;
+						const signedDistance = pointerNormal - edgePosition;
+						const distance = Math.hypot(signedDistance, tangentGap * 0.7);
+						const intensity = clamp(1 - distance / influence, 0, 1) ** 2;
+						const normalShift = (signedDistance >= 0 ? -1 : 1) * maximumShift * intensity;
+						const tangentCentre = (tangentStart + tangentEnd) / 2;
+						const tangentHalf = Math.max((tangentEnd - tangentStart) / 2, 1);
+						const tangentShift =
+							clamp((tangentCentre - pointerTangent) / tangentHalf, -1, 1) * 13 * intensity;
+
+						if (horizontal) {
+							targetX = tangentShift;
+							targetY = normalShift;
+						} else {
+							targetX = normalShift;
+							targetY = tangentShift;
+						}
+						targetScale = 1 - intensity * 0.075;
+					}
+
+					line.x += (targetX - line.x) * 0.18;
+					line.y += (targetY - line.y) * 0.18;
+					line.scale += (targetScale - line.scale) * 0.18;
+					stillMoving ||=
+						Math.abs(targetX - line.x) > 0.04 ||
+						Math.abs(targetY - line.y) > 0.04 ||
+						Math.abs(targetScale - line.scale) > 0.001;
+
+					const scaleTransform =
+						line.edge === 'top' || line.edge === 'bottom'
+							? `scaleX(${line.scale})`
+							: `scaleY(${line.scale})`;
+					line.element!.style.transform = `translate3d(${line.x}px, ${line.y}px, 0) ${scaleTransform}`;
+				}
+			}
+
+			if (stillMoving) scheduleFrameMotion();
+		};
+
+		window.addEventListener(
+			'pointermove',
+			(event) => {
+				if (event.pointerType === 'touch') return;
+				pointerX = event.clientX;
+				pointerY = event.clientY;
+				pointerActive = true;
+				scheduleFrameMotion();
+			},
+			{ passive: true },
+		);
+
+		const resetFrameMotion = () => {
+			pointerActive = false;
+			scheduleFrameMotion();
+		};
+
+		document.documentElement.addEventListener('mouseleave', resetFrameMotion);
+		window.addEventListener('blur', resetFrameMotion);
+	}
 </script>
 
 <style>
@@ -409,7 +588,7 @@ const navigation = [
 		--line: #10100d;
 		--line-dark: #10100d;
 		--link: #143d31;
-		width: min(1120px, calc(100% - 32px));
+		width: min(1540px, calc(100% - 48px));
 		min-height: 100vh;
 		margin: 0 auto;
 		padding: 34px 0 72px;
@@ -419,8 +598,122 @@ const navigation = [
 	.hero-grid,
 	.register-grid {
 		display: grid;
-		grid-template-columns: 86px minmax(0, 1fr);
-		column-gap: 28px;
+		grid-template-columns: 96px minmax(0, 1fr);
+		column-gap: 34px;
+	}
+
+	.line-frame {
+		--frame-top-left: -18px;
+		--frame-top-right: 4%;
+		--frame-bottom-left: 5%;
+		--frame-bottom-right: -26px;
+		--frame-side-top: 12px;
+		--frame-side-bottom: -14px;
+		position: relative;
+	}
+
+	.line-frame[data-frame-variant="hero"] {
+		--frame-top-left: -28px;
+		--frame-top-right: 7%;
+		--frame-bottom-left: 11%;
+		--frame-bottom-right: -42px;
+		--frame-side-top: 18px;
+		--frame-side-bottom: -16px;
+	}
+
+	.line-frame[data-frame-variant="statement"] {
+		--frame-top-left: -34px;
+		--frame-top-right: -14px;
+		--frame-bottom-left: 8%;
+		--frame-bottom-right: -54px;
+		--frame-side-top: 22px;
+		--frame-side-bottom: -18px;
+	}
+
+	.line-frame[data-frame-variant="direction"] {
+		--frame-top-left: 7%;
+		--frame-top-right: -52px;
+		--frame-bottom-left: -22px;
+		--frame-bottom-right: 12%;
+		--frame-side-top: -16px;
+		--frame-side-bottom: 24px;
+	}
+
+	.line-frame[data-frame-variant="register"] {
+		--frame-top-left: -48px;
+		--frame-top-right: 10%;
+		--frame-bottom-left: 14%;
+		--frame-bottom-right: -18px;
+		--frame-side-top: 14px;
+		--frame-side-bottom: -22px;
+	}
+
+	.line-frame[data-frame-variant="contact"] {
+		--frame-top-left: 10%;
+		--frame-top-right: -38px;
+		--frame-bottom-left: -26px;
+		--frame-bottom-right: 5%;
+		--frame-side-top: -12px;
+		--frame-side-bottom: 18px;
+	}
+
+	.line-frame > :not(.reactive-frame-lines) {
+		position: relative;
+		z-index: 1;
+	}
+
+	.reactive-frame-lines {
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		display: block;
+		pointer-events: none;
+	}
+
+	.frame-line {
+		position: absolute;
+		display: block;
+		background: color-mix(in srgb, var(--line) 76%, transparent);
+		transform: translate3d(0, 0, 0);
+		transform-origin: center;
+		will-change: transform;
+	}
+
+	.frame-line--top,
+	.frame-line--bottom {
+		height: 1px;
+	}
+
+	.frame-line--top {
+		top: 0;
+		left: var(--frame-top-left);
+		right: var(--frame-top-right);
+	}
+
+	.frame-line--bottom {
+		right: var(--frame-bottom-right);
+		bottom: 0;
+		left: var(--frame-bottom-left);
+	}
+
+	.frame-line--left,
+	.frame-line--right {
+		top: var(--frame-side-top);
+		bottom: var(--frame-side-bottom);
+		width: 1px;
+	}
+
+	.frame-line--left {
+		left: 0;
+	}
+
+	.frame-line--right {
+		right: 0;
+	}
+
+	.line-frame[data-frame-variant="hero"] .frame-line--top,
+	.line-frame[data-frame-variant="register"] .frame-line--top {
+		height: 2px;
 	}
 
 	.margin-note,
@@ -448,7 +741,7 @@ const navigation = [
 		min-height: 46vh;
 		padding: 18px 0 52px;
 		border-top: 2px solid var(--line-dark);
-		border-bottom: 1px solid var(--line-dark);
+		border-bottom: 1px solid color-mix(in srgb, var(--line-dark) 48%, transparent);
 	}
 
 	.margin-note {
@@ -465,9 +758,7 @@ const navigation = [
 	}
 
 	.identity-card {
-		width: min(760px, 100%);
-		border-top: 3px solid var(--line-dark);
-		border-bottom: 1px solid var(--line-dark);
+		width: min(1100px, 90%);
 	}
 
 	.identity-rule {
@@ -499,7 +790,7 @@ const navigation = [
 		display: flex;
 		flex-wrap: wrap;
 		gap: 5px 10px;
-		width: min(760px, 100%);
+		width: min(1100px, 90%);
 		padding-top: 12px;
 		color: var(--faint);
 		font-family: var(--font-mono);
@@ -564,7 +855,7 @@ const navigation = [
 
 	.register-grid {
 		padding: 24px 0 58px;
-		border-bottom: 1px solid var(--line);
+		border-bottom: 1px solid color-mix(in srgb, var(--line) 42%, transparent);
 	}
 
 	.section-mark {
@@ -597,7 +888,10 @@ const navigation = [
 	.statement {
 		display: grid;
 		gap: 20px;
-		max-width: 760px;
+		width: min(1080px, 88%);
+		max-width: none;
+		margin: 10px 0 4px;
+		padding: 34px 38px 30px;
 		font-size: clamp(18px, 2vw, 26px);
 		line-height: 1.42;
 		letter-spacing: 0.035em;
@@ -614,7 +908,7 @@ const navigation = [
 
 	.cv-dossier {
 		display: grid;
-		width: min(760px, 100%);
+		width: 100%;
 		border-top: 1px solid var(--line);
 		border-bottom: 1px solid var(--line);
 		font-size: 13px;
@@ -817,9 +1111,8 @@ const navigation = [
 
 	.direction-copy {
 		display: grid;
-		width: min(58ch, 100%);
-		padding-top: 2px;
-		border-top: 1px solid var(--line);
+		width: min(900px, 74%);
+		padding: 18px 32px 14px;
 	}
 
 	.direction-copy p {
@@ -832,7 +1125,8 @@ const navigation = [
 
 	.index-list {
 		display: grid;
-		border-top: 2px solid var(--line-dark);
+		width: min(1280px, 100%);
+		padding: 16px 28px 18px;
 	}
 
 	.index-list a {
@@ -907,6 +1201,9 @@ const navigation = [
 		align-items: baseline;
 		justify-content: space-between;
 		gap: 24px;
+		width: min(1040px, 84%);
+		margin: 8px 0;
+		padding: 26px 32px;
 	}
 
 	.contact-primary {
@@ -978,6 +1275,26 @@ const navigation = [
 
 		.identity-card {
 			width: 100%;
+		}
+
+		.discipline-line,
+		.statement,
+		.direction-copy,
+		.index-list,
+		.contact-line {
+			width: 100%;
+		}
+
+		.statement,
+		.direction-copy,
+		.contact-line {
+			padding-right: 24px;
+			padding-left: 24px;
+		}
+
+		.index-list {
+			padding-right: 20px;
+			padding-left: 20px;
 		}
 
 		.identity-columns {
@@ -1060,7 +1377,19 @@ const navigation = [
 		}
 
 		.statement {
+			padding: 26px 18px 24px;
 			font-size: 18px;
+		}
+
+		.direction-copy,
+		.contact-line {
+			padding-right: 18px;
+			padding-left: 18px;
+		}
+
+		.index-list {
+			padding-right: 14px;
+			padding-left: 14px;
 		}
 
 		.discipline-line {
