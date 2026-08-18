@@ -354,6 +354,8 @@ const navigation = [
 </Layout>
 
 <script>
+	import { gsap } from 'gsap';
+
 	const registerEntryLinks = document.querySelectorAll('.index-list a');
 	const identityTitle = document.querySelector('[data-identity-title]');
 	const identityToggle = document.querySelector('[data-identity-toggle]');
@@ -453,83 +455,157 @@ const navigation = [
 	const reactiveFrames = document.querySelectorAll<HTMLElement>('[data-reactive-frame]');
 	const reduceFrameMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 	const finePointer = window.matchMedia('(pointer: fine)');
+	const motionEnabled = finePointer.matches && !reduceFrameMotion.matches;
+	const svgNamespace = 'http://www.w3.org/2000/svg';
 	const clamp = (value: number, minimum: number, maximum: number) =>
 		Math.min(maximum, Math.max(minimum, value));
 	const randomBetween = (minimum: number, maximum: number) =>
 		minimum + Math.random() * (maximum - minimum);
+	const createSvgElement = <K extends keyof SVGElementTagNameMap>(name: K) =>
+		document.createElementNS(svgNamespace, name);
+	const setSvgAttributes = (element: SVGElement, attributes: Record<string, string | number>) => {
+		for (const [name, value] of Object.entries(attributes)) {
+			element.setAttribute(name, String(value));
+		}
+	};
 
 	const frameStates = Array.from(reactiveFrames).map((frame, frameIndex) => {
 		const horizontalLines = (['top', 'bottom'] as const)
 			.map((edge) => {
 				const element = frame.querySelector<HTMLElement>(`[data-frame-line="${edge}"]`);
 				if (!element) return null;
-
 				element.style.setProperty('--line-thickness', `${randomBetween(1.35, 2.15).toFixed(2)}px`);
-
-				return { edge, element, y: 0 };
+				return {
+					edge,
+					element,
+					moveY: motionEnabled
+						? gsap.quickTo(element, 'y', { duration: 0.32, ease: 'power3.out' })
+						: null,
+				};
 			})
 			.filter((line): line is NonNullable<typeof line> => Boolean(line));
 
 		const verticalFields = (['left', 'right'] as const)
 			.map((edge, edgeIndex) => {
-				const element = frame.querySelector<HTMLElement>(`[data-frame-line="${edge}"]`);
-				if (!element) return null;
+				const mount = frame.querySelector<HTMLElement>(`[data-frame-line="${edge}"]`);
+				if (!mount) return null;
 
 				const fieldHeight = Math.max(frame.offsetHeight, 160);
-				const capMaximum = Math.max(30, Math.min(68, fieldHeight * 0.3));
-				const capMinimum = Math.min(34, capMaximum * 0.72);
+				const capMaximum = Math.max(34, Math.min(72, fieldHeight * 0.3));
+				const capMinimum = Math.min(38, capMaximum * 0.72);
 				const topCapLength = randomBetween(capMinimum, capMaximum);
 				const bottomCapLength = randomBetween(capMinimum, capMaximum);
-				const coreThickness = randomBetween(1.7, 2.35);
-				const core = document.createElement('span');
+				const coreThickness = randomBetween(1.55, 2.1);
+				const filterId = `vertical-goo-${frameIndex}-${edgeIndex}`;
+				const svg = createSvgElement('svg');
+				const defs = createSvgElement('defs');
+				const filter = createSvgElement('filter');
+				const blur = createSvgElement('feGaussianBlur');
+				const matrix = createSvgElement('feColorMatrix');
+				const composite = createSvgElement('feComposite');
+				const core = createSvgElement('line');
+				const fragments = createSvgElement('g');
 
-				element.replaceChildren();
-				element.style.setProperty('--top-cap-length', `${(topCapLength * 0.82).toFixed(2)}px`);
-				element.style.setProperty('--bottom-cap-length', `${(bottomCapLength * 0.82).toFixed(2)}px`);
-				element.style.setProperty('--core-thickness', `${coreThickness.toFixed(2)}px`);
-				core.className = 'vertical-core';
-				element.append(core);
+				setSvgAttributes(svg, {
+					viewBox: `-8 0 16 ${fieldHeight}`,
+					preserveAspectRatio: 'none',
+					'aria-hidden': 'true',
+					focusable: 'false',
+				});
+				svg.classList.add('vertical-field-svg');
+				setSvgAttributes(filter, {
+					id: filterId,
+					filterUnits: 'userSpaceOnUse',
+					x: -12,
+					y: -12,
+					width: 24,
+					height: fieldHeight + 24,
+				});
+				setSvgAttributes(blur, { in: 'SourceGraphic', stdDeviation: 1.15, result: 'blur' });
+				setSvgAttributes(matrix, {
+					in: 'blur',
+					mode: 'matrix',
+					values: '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8',
+					result: 'goo',
+				});
+				setSvgAttributes(composite, {
+					in: 'SourceGraphic',
+					in2: 'goo',
+					operator: 'atop',
+				});
+				setSvgAttributes(core, {
+					x1: 0,
+					x2: 0,
+					y1: topCapLength * 0.78,
+					y2: fieldHeight - bottomCapLength * 0.78,
+					'stroke-width': coreThickness,
+					'vector-effect': 'non-scaling-stroke',
+				});
+				core.classList.add('vertical-svg-core');
+				fragments.classList.add('vertical-svg-fragments');
+				fragments.setAttribute('filter', `url(#${filterId})`);
+				filter.append(blur, matrix, composite);
+				defs.append(filter);
+				svg.append(defs, core, fragments);
+				mount.replaceChildren(svg);
 
 				const units: Array<{
-					element: HTMLElement;
+					element: SVGGraphicsElement;
 					ratio: number;
 					isDot: boolean;
 					baseX: number;
 					baseY: number;
 					baseOpacity: number;
-					x: number;
-					y: number;
-					scaleX: number;
-					scaleY: number;
-					opacity: number;
+					moveX: ((value: number) => void) | null;
+					moveY: ((value: number) => void) | null;
+					scaleX: ((value: number) => void) | null;
+					scaleY: ((value: number) => void) | null;
+					fade: ((value: number) => void) | null;
 				}> = [];
 
 				const buildFragmentedEnd = (position: 'top' | 'bottom', capLength: number) => {
-					const unitCount = clamp(Math.round(capLength / 9), 4, 9);
-
+					const unitCount = clamp(Math.round(capLength / 9), 5, 9);
 					for (let unitIndex = 0; unitIndex < unitCount; unitIndex += 1) {
-						const unit = document.createElement('span');
 						const isDot = (unitIndex + edgeIndex + frameIndex) % 3 === 2;
 						const distanceFromEnd = ((unitIndex + 0.5) / unitCount) * capLength;
-						const ratio =
-							position === 'top'
-								? distanceFromEnd / fieldHeight
-								: 1 - distanceFromEnd / fieldHeight;
-						const unitThickness = isDot
-							? randomBetween(2.8, 4)
-							: coreThickness * randomBetween(0.88, 1.08);
-						const unitLength = isDot ? unitThickness : randomBetween(4.5, 10.5);
-						const baseX = randomBetween(-3.6, 3.6);
-						const baseY = randomBetween(-2.2, 2.2);
-						const baseOpacity = randomBetween(0.58, 0.78);
+						const centreY = position === 'top' ? distanceFromEnd : fieldHeight - distanceFromEnd;
+						const ratio = centreY / fieldHeight;
+						const thickness = isDot
+							? randomBetween(2.7, 3.8)
+							: coreThickness * randomBetween(0.9, 1.08);
+						const length = isDot ? thickness : randomBetween(4.5, 10);
+						const baseX = randomBetween(-3.2, 3.2);
+						const baseY = randomBetween(-2.1, 2.1);
+						const baseOpacity = randomBetween(0.58, 0.76);
+						let unit: SVGGraphicsElement;
 
-						unit.className = `vertical-unit ${isDot ? 'vertical-unit--dot' : 'vertical-unit--dash'}`;
-						unit.style.top = `${(ratio * 100).toFixed(3)}%`;
-						unit.style.setProperty('--unit-thickness', `${unitThickness.toFixed(2)}px`);
-						unit.style.setProperty('--unit-length', `${unitLength.toFixed(2)}px`);
-						unit.style.opacity = baseOpacity.toFixed(2);
-						unit.style.transform = `translate3d(${baseX}px, calc(-50% + ${baseY}px), 0)`;
-						element.append(unit);
+						if (isDot) {
+							const circle = createSvgElement('circle');
+							setSvgAttributes(circle, { cx: 0, cy: centreY, r: thickness / 2 });
+							circle.classList.add('vertical-svg-fragment', 'vertical-svg-dot');
+							unit = circle;
+						} else {
+							const line = createSvgElement('line');
+							setSvgAttributes(line, {
+								x1: 0,
+								x2: 0,
+								y1: centreY - length / 2,
+								y2: centreY + length / 2,
+								'stroke-width': thickness,
+								'vector-effect': 'non-scaling-stroke',
+							});
+							line.classList.add('vertical-svg-fragment', 'vertical-svg-dash');
+							unit = line;
+						}
+
+						fragments.append(unit);
+						gsap.set(unit, {
+							x: baseX,
+							y: baseY,
+							opacity: baseOpacity,
+							transformBox: 'fill-box',
+							transformOrigin: 'center center',
+						});
 						units.push({
 							element: unit,
 							ratio,
@@ -537,46 +613,46 @@ const navigation = [
 							baseX,
 							baseY,
 							baseOpacity,
-							x: baseX,
-							y: baseY,
-							scaleX: 1,
-							scaleY: 1,
-							opacity: baseOpacity,
+							moveX: motionEnabled
+								? gsap.quickTo(unit, 'x', { duration: 0.38, ease: 'power3.out' })
+								: null,
+							moveY: motionEnabled
+								? gsap.quickTo(unit, 'y', { duration: 0.38, ease: 'power3.out' })
+								: null,
+							scaleX: motionEnabled
+								? gsap.quickTo(unit, 'scaleX', { duration: 0.4, ease: 'power3.out' })
+								: null,
+							scaleY: motionEnabled
+								? gsap.quickTo(unit, 'scaleY', { duration: 0.4, ease: 'power3.out' })
+								: null,
+							fade: motionEnabled
+								? gsap.quickTo(unit, 'opacity', { duration: 0.28, ease: 'power2.out' })
+								: null,
 						});
 					}
 				};
 
 				buildFragmentedEnd('top', topCapLength);
 				buildFragmentedEnd('bottom', bottomCapLength);
-
-				return { edge, element, units };
+				return { edge, units };
 			})
 			.filter((field): field is NonNullable<typeof field> => Boolean(field));
 
 		return { frame, horizontalLines, verticalFields };
 	});
 
-	if (frameStates.length && finePointer.matches && !reduceFrameMotion.matches) {
-
+	if (frameStates.length && motionEnabled) {
 		let pointerX = -1000;
 		let pointerY = -1000;
 		let pointerActive = false;
 		let animationFrame = 0;
 
-		const scheduleFrameMotion = () => {
-			if (!animationFrame) animationFrame = requestAnimationFrame(renderFrameMotion);
-		};
-
 		const renderFrameMotion = () => {
 			animationFrame = 0;
-			let stillMoving = false;
-
 			for (const state of frameStates) {
 				const rect = state.frame.getBoundingClientRect();
-
 				for (const line of state.horizontalLines) {
 					let targetY = 0;
-
 					if (pointerActive) {
 						const edgePosition = line.edge === 'top' ? rect.top : rect.bottom;
 						const tangentGap =
@@ -590,51 +666,31 @@ const navigation = [
 						const intensity = clamp(1 - distance / 92, 0, 1) ** 2;
 						targetY = (signedDistance >= 0 ? -1 : 1) * 4 * intensity;
 					}
-
-					line.y += (targetY - line.y) * 0.12;
-					stillMoving ||= Math.abs(targetY - line.y) > 0.04;
-					line.element.style.transform = `translate3d(0, ${line.y}px, 0)`;
+					line.moveY?.(targetY);
 				}
 
 				for (const field of state.verticalFields) {
 					const edgeX = field.edge === 'left' ? rect.left : rect.right;
-					const horizontalDistance = Math.abs(pointerX - edgeX);
 					const fieldIntensity = pointerActive
-						? clamp(1 - horizontalDistance / 64, 0, 1) ** 2
+						? clamp(1 - Math.abs(pointerX - edgeX) / 70, 0, 1) ** 2
 						: 0;
 					for (const unit of field.units) {
 						const unitY = rect.top + rect.height * unit.ratio;
-						const verticalDistance = Math.abs(pointerY - unitY);
-						const verticalProximity = clamp(1 - verticalDistance / 82, 0, 1);
-						const localIntensity = fieldIntensity * verticalProximity ** 2;
-						const targetX = unit.baseX * (1 - localIntensity);
-						const targetY = unit.baseY * (1 - localIntensity);
-						const targetScaleX = unit.isDot ? 1 - localIntensity * 0.22 : 1;
-						const targetScaleY = unit.isDot
-							? 1 + localIntensity * 1.35
-							: 1 + localIntensity * 0.65;
-						const targetOpacity = unit.baseOpacity + (0.96 - unit.baseOpacity) * localIntensity;
-
-						unit.x += (targetX - unit.x) * 0.16;
-						unit.y += (targetY - unit.y) * 0.16;
-						unit.scaleX += (targetScaleX - unit.scaleX) * 0.16;
-						unit.scaleY += (targetScaleY - unit.scaleY) * 0.16;
-						unit.opacity += (targetOpacity - unit.opacity) * 0.16;
-						stillMoving ||=
-							Math.abs(targetX - unit.x) > 0.03 ||
-							Math.abs(targetY - unit.y) > 0.03 ||
-							Math.abs(targetScaleX - unit.scaleX) > 0.002 ||
-							Math.abs(targetScaleY - unit.scaleY) > 0.002 ||
-							Math.abs(targetOpacity - unit.opacity) > 0.002;
-						unit.element.style.opacity = unit.opacity.toFixed(3);
-						unit.element.style.transform = `translate3d(${unit.x}px, calc(-50% + ${unit.y}px), 0) scale(${unit.scaleX}, ${unit.scaleY})`;
+						const verticalProximity = clamp(1 - Math.abs(pointerY - unitY) / 88, 0, 1);
+						const fusion = fieldIntensity * verticalProximity ** 2;
+						unit.moveX?.(unit.baseX * (1 - fusion));
+						unit.moveY?.(unit.baseY * (1 - fusion));
+						unit.scaleX?.(unit.isDot ? 1 - fusion * 0.28 : 1);
+						unit.scaleY?.(unit.isDot ? 1 + fusion * 1.7 : 1 + fusion * 0.82);
+						unit.fade?.(unit.baseOpacity + (0.98 - unit.baseOpacity) * fusion);
 					}
 				}
 			}
-
-			if (stillMoving) scheduleFrameMotion();
 		};
 
+		const scheduleFrameMotion = () => {
+			if (!animationFrame) animationFrame = requestAnimationFrame(renderFrameMotion);
+		};
 		window.addEventListener(
 			'pointermove',
 			(event) => {
@@ -646,12 +702,10 @@ const navigation = [
 			},
 			{ passive: true },
 		);
-
 		const resetFrameMotion = () => {
 			pointerActive = false;
 			scheduleFrameMotion();
 		};
-
 		document.documentElement.addEventListener('mouseleave', resetFrameMotion);
 		window.addEventListener('blur', resetFrameMotion);
 	}
@@ -758,34 +812,28 @@ const navigation = [
 		right: -8px;
 	}
 
-	:global(.vertical-core) {
-		position: absolute;
-		top: var(--top-cap-length, 42px);
-		bottom: var(--bottom-cap-length, 42px);
-		left: 50%;
+	:global(.vertical-field-svg) {
 		display: block;
-		width: var(--core-thickness, 2px);
-		margin-left: calc(var(--core-thickness, 2px) * -0.5);
-		border-radius: 999px;
-		background: color-mix(in srgb, var(--line) 82%, transparent);
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+		color: color-mix(in srgb, var(--line) 88%, transparent);
 	}
 
-	:global(.vertical-unit) {
-		position: absolute;
-		left: 50%;
-		display: block;
-		width: var(--unit-thickness, 2.4px);
-		height: var(--unit-length, 12px);
-		margin-left: calc(var(--unit-thickness, 2.4px) * -0.5);
-		background: color-mix(in srgb, var(--line) 88%, transparent);
-		border-radius: 999px;
-		transform: translate3d(0, -50%, 0) scaleY(1);
+	:global(.vertical-svg-core),
+	:global(.vertical-svg-dash) {
+		stroke: currentColor;
+		stroke-linecap: round;
+	}
+
+	:global(.vertical-svg-dot) {
+		fill: currentColor;
+	}
+
+	:global(.vertical-svg-fragment) {
+		transform-box: fill-box;
 		transform-origin: center;
-		will-change: transform;
-	}
-
-	:global(.vertical-unit--dot) {
-		border-radius: 50%;
+		will-change: transform, opacity;
 	}
 
 	.margin-note,
