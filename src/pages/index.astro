@@ -491,11 +491,7 @@ const navigation = [
 				if (!mount) return null;
 
 				const fieldHeight = Math.max(frame.offsetHeight, 160);
-				const capMaximum = Math.max(34, Math.min(72, fieldHeight * 0.3));
-				const capMinimum = Math.min(38, capMaximum * 0.72);
-				const topCapLength = randomBetween(capMinimum, capMaximum);
-				const bottomCapLength = randomBetween(capMinimum, capMaximum);
-				const coreThickness = randomBetween(1.55, 2.1);
+				const fragmentThickness = randomBetween(1.6, 2.25);
 				const filterId = `vertical-goo-${frameIndex}-${edgeIndex}`;
 				const svg = createSvgElement('svg');
 				const defs = createSvgElement('defs');
@@ -503,7 +499,6 @@ const navigation = [
 				const blur = createSvgElement('feGaussianBlur');
 				const matrix = createSvgElement('feColorMatrix');
 				const composite = createSvgElement('feComposite');
-				const core = createSvgElement('line');
 				const fragments = createSvgElement('g');
 
 				setSvgAttributes(svg, {
@@ -533,20 +528,11 @@ const navigation = [
 					in2: 'goo',
 					operator: 'atop',
 				});
-				setSvgAttributes(core, {
-					x1: 0,
-					x2: 0,
-					y1: topCapLength * 0.78,
-					y2: fieldHeight - bottomCapLength * 0.78,
-					'stroke-width': coreThickness,
-					'vector-effect': 'non-scaling-stroke',
-				});
-				core.classList.add('vertical-svg-core');
 				fragments.classList.add('vertical-svg-fragments');
 				fragments.setAttribute('filter', `url(#${filterId})`);
 				filter.append(blur, matrix, composite);
 				defs.append(filter);
-				svg.append(defs, core, fragments);
+				svg.append(defs, fragments);
 				mount.replaceChildren(svg);
 
 				const units: Array<{
@@ -563,20 +549,20 @@ const navigation = [
 					fade: ((value: number) => void) | null;
 				}> = [];
 
-				const buildFragmentedEnd = (position: 'top' | 'bottom', capLength: number) => {
-					const unitCount = clamp(Math.round(capLength / 9), 5, 9);
+				const buildFragmentedLine = () => {
+					const unitCount = clamp(Math.ceil(fieldHeight / 4.4), 36, 180);
+					const step = fieldHeight / unitCount;
 					for (let unitIndex = 0; unitIndex < unitCount; unitIndex += 1) {
-						const isDot = (unitIndex + edgeIndex + frameIndex) % 3 === 2;
-						const distanceFromEnd = ((unitIndex + 0.5) / unitCount) * capLength;
-						const centreY = position === 'top' ? distanceFromEnd : fieldHeight - distanceFromEnd;
+						const isDot = (unitIndex + edgeIndex * 2 + frameIndex) % 8 === 5;
+						const centreY = (unitIndex + 0.5) * step;
 						const ratio = centreY / fieldHeight;
 						const thickness = isDot
-							? randomBetween(2.7, 3.8)
-							: coreThickness * randomBetween(0.9, 1.08);
-						const length = isDot ? thickness : randomBetween(4.5, 10);
-						const baseX = randomBetween(-3.2, 3.2);
-						const baseY = randomBetween(-2.1, 2.1);
-						const baseOpacity = randomBetween(0.58, 0.76);
+							? randomBetween(2.35, 3.15)
+							: fragmentThickness * randomBetween(0.9, 1.08);
+						const length = isDot ? thickness : randomBetween(step * 0.88, step * 1.42);
+						const baseX = randomBetween(-1.15, 1.15);
+						const baseY = randomBetween(-0.55, 0.55);
+						const baseOpacity = randomBetween(0.68, 0.88);
 						let unit: SVGGraphicsElement;
 
 						if (isDot) {
@@ -632,8 +618,7 @@ const navigation = [
 					}
 				};
 
-				buildFragmentedEnd('top', topCapLength);
-				buildFragmentedEnd('bottom', bottomCapLength);
+				buildFragmentedLine();
 				return { edge, units };
 			})
 			.filter((field): field is NonNullable<typeof field> => Boolean(field));
@@ -670,14 +655,14 @@ const navigation = [
 				}
 
 				for (const field of state.verticalFields) {
-					const edgeX = field.edge === 'left' ? rect.left : rect.right;
-					const fieldIntensity = pointerActive
-						? clamp(1 - Math.abs(pointerX - edgeX) / 70, 0, 1) ** 2
-						: 0;
+					const pointerInsideVerticalRange =
+						pointerActive && pointerY >= rect.top && pointerY <= rect.bottom;
 					for (const unit of field.units) {
 						const unitY = rect.top + rect.height * unit.ratio;
-						const verticalProximity = clamp(1 - Math.abs(pointerY - unitY) / 88, 0, 1);
-						const fusion = fieldIntensity * verticalProximity ** 2;
+						const verticalProximity = pointerInsideVerticalRange
+							? clamp(1 - Math.abs(pointerY - unitY) / 112, 0, 1)
+							: 0;
+						const fusion = verticalProximity ** 2;
 						unit.moveX?.(unit.baseX * (1 - fusion));
 						unit.moveY?.(unit.baseY * (1 - fusion));
 						unit.scaleX?.(unit.isDot ? 1 - fusion * 0.28 : 1);
@@ -820,7 +805,6 @@ const navigation = [
 		color: color-mix(in srgb, var(--line) 88%, transparent);
 	}
 
-	:global(.vertical-svg-core),
 	:global(.vertical-svg-dash) {
 		stroke: currentColor;
 		stroke-linecap: round;
