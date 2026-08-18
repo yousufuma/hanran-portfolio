@@ -476,34 +476,78 @@ const navigation = [
 				if (!element) return null;
 
 				const fieldHeight = Math.max(frame.offsetHeight, 160);
-				const unitCount = clamp(Math.round(fieldHeight / 20), 12, 30);
-				const verticalPattern = [13, 10, 7, 0, 6, 0, 0];
-				const dashThickness = randomBetween(2.1, 2.9);
-				const dotSize = randomBetween(3.4, 4.2);
-				const units = Array.from({ length: unitCount }, (_, unitIndex) => {
-					const unit = document.createElement('span');
-					const patternValue = verticalPattern[unitIndex % verticalPattern.length];
-					const isDot = patternValue === 0;
-					const ratio = (unitIndex + 0.5) / unitCount;
-					const unitThickness = isDot ? dotSize : dashThickness;
-					const unitLength = isDot ? unitThickness : patternValue;
+				const capMaximum = Math.max(30, Math.min(68, fieldHeight * 0.3));
+				const capMinimum = Math.min(34, capMaximum * 0.72);
+				const topCapLength = randomBetween(capMinimum, capMaximum);
+				const bottomCapLength = randomBetween(capMinimum, capMaximum);
+				const coreThickness = randomBetween(1.7, 2.35);
+				const core = document.createElement('span');
 
-					unit.className = `vertical-unit ${isDot ? 'vertical-unit--dot' : 'vertical-unit--dash'}`;
-					unit.style.top = `${(ratio * 100).toFixed(3)}%`;
-					unit.style.setProperty('--unit-thickness', `${unitThickness.toFixed(2)}px`);
-					unit.style.setProperty('--unit-length', `${unitLength.toFixed(2)}px`);
-					unit.style.opacity = '0.84';
-					element.append(unit);
+				element.replaceChildren();
+				element.style.setProperty('--top-cap-length', `${(topCapLength * 0.82).toFixed(2)}px`);
+				element.style.setProperty('--bottom-cap-length', `${(bottomCapLength * 0.82).toFixed(2)}px`);
+				element.style.setProperty('--core-thickness', `${coreThickness.toFixed(2)}px`);
+				core.className = 'vertical-core';
+				element.append(core);
 
-					return {
-						element: unit,
-						ratio,
-						isDot,
-						phase: (unitIndex + 1) * 1.618 + edgeIndex * 0.8 + frameIndex * 0.45,
-						y: 0,
-						scale: 1,
-					};
-				});
+				const units: Array<{
+					element: HTMLElement;
+					ratio: number;
+					isDot: boolean;
+					baseX: number;
+					baseY: number;
+					baseOpacity: number;
+					x: number;
+					y: number;
+					scaleX: number;
+					scaleY: number;
+					opacity: number;
+				}> = [];
+
+				const buildFragmentedEnd = (position: 'top' | 'bottom', capLength: number) => {
+					const unitCount = clamp(Math.round(capLength / 9), 4, 9);
+
+					for (let unitIndex = 0; unitIndex < unitCount; unitIndex += 1) {
+						const unit = document.createElement('span');
+						const isDot = (unitIndex + edgeIndex + frameIndex) % 3 === 2;
+						const distanceFromEnd = ((unitIndex + 0.5) / unitCount) * capLength;
+						const ratio =
+							position === 'top'
+								? distanceFromEnd / fieldHeight
+								: 1 - distanceFromEnd / fieldHeight;
+						const unitThickness = isDot
+							? randomBetween(2.8, 4)
+							: coreThickness * randomBetween(0.88, 1.08);
+						const unitLength = isDot ? unitThickness : randomBetween(4.5, 10.5);
+						const baseX = randomBetween(-3.6, 3.6);
+						const baseY = randomBetween(-2.2, 2.2);
+						const baseOpacity = randomBetween(0.58, 0.78);
+
+						unit.className = `vertical-unit ${isDot ? 'vertical-unit--dot' : 'vertical-unit--dash'}`;
+						unit.style.top = `${(ratio * 100).toFixed(3)}%`;
+						unit.style.setProperty('--unit-thickness', `${unitThickness.toFixed(2)}px`);
+						unit.style.setProperty('--unit-length', `${unitLength.toFixed(2)}px`);
+						unit.style.opacity = baseOpacity.toFixed(2);
+						unit.style.transform = `translate3d(${baseX}px, calc(-50% + ${baseY}px), 0)`;
+						element.append(unit);
+						units.push({
+							element: unit,
+							ratio,
+							isDot,
+							baseX,
+							baseY,
+							baseOpacity,
+							x: baseX,
+							y: baseY,
+							scaleX: 1,
+							scaleY: 1,
+							opacity: baseOpacity,
+						});
+					}
+				};
+
+				buildFragmentedEnd('top', topCapLength);
+				buildFragmentedEnd('bottom', bottomCapLength);
 
 				return { edge, element, units };
 			})
@@ -560,27 +604,30 @@ const navigation = [
 						: 0;
 					for (const unit of field.units) {
 						const unitY = rect.top + rect.height * unit.ratio;
-						const relativeToPointer = pointerY - unitY;
 						const verticalDistance = Math.abs(pointerY - unitY);
-						const verticalProximity = clamp(1 - verticalDistance / 108, 0, 1);
+						const verticalProximity = clamp(1 - verticalDistance / 82, 0, 1);
 						const localIntensity = fieldIntensity * verticalProximity ** 2;
-						const gather = clamp(relativeToPointer, -36, 36) * 0.12 * localIntensity;
-						const ripple =
-							Math.sin(unit.phase + pointerY * 0.035) * 1.8 * localIntensity;
-						const targetY = gather + ripple;
-						const targetScale = unit.isDot
-							? 1 + localIntensity * 0.26
-							: 1 - localIntensity * 0.18 + Math.cos(unit.phase) * 0.05 * localIntensity;
+						const targetX = unit.baseX * (1 - localIntensity);
+						const targetY = unit.baseY * (1 - localIntensity);
+						const targetScaleX = unit.isDot ? 1 - localIntensity * 0.22 : 1;
+						const targetScaleY = unit.isDot
+							? 1 + localIntensity * 1.35
+							: 1 + localIntensity * 0.65;
+						const targetOpacity = unit.baseOpacity + (0.96 - unit.baseOpacity) * localIntensity;
 
+						unit.x += (targetX - unit.x) * 0.16;
 						unit.y += (targetY - unit.y) * 0.16;
-						unit.scale += (targetScale - unit.scale) * 0.16;
+						unit.scaleX += (targetScaleX - unit.scaleX) * 0.16;
+						unit.scaleY += (targetScaleY - unit.scaleY) * 0.16;
+						unit.opacity += (targetOpacity - unit.opacity) * 0.16;
 						stillMoving ||=
+							Math.abs(targetX - unit.x) > 0.03 ||
 							Math.abs(targetY - unit.y) > 0.03 ||
-							Math.abs(targetScale - unit.scale) > 0.002;
-						const scaleTransform = unit.isDot
-							? `scale(${unit.scale})`
-							: `scaleY(${unit.scale})`;
-						unit.element.style.transform = `translate3d(0, calc(-50% + ${unit.y}px), 0) ${scaleTransform}`;
+							Math.abs(targetScaleX - unit.scaleX) > 0.002 ||
+							Math.abs(targetScaleY - unit.scaleY) > 0.002 ||
+							Math.abs(targetOpacity - unit.opacity) > 0.002;
+						unit.element.style.opacity = unit.opacity.toFixed(3);
+						unit.element.style.transform = `translate3d(${unit.x}px, calc(-50% + ${unit.y}px), 0) scale(${unit.scaleX}, ${unit.scaleY})`;
 					}
 				}
 			}
@@ -611,6 +658,14 @@ const navigation = [
 </script>
 
 <style>
+	:global(html),
+	:global(body) {
+		width: 100%;
+		max-width: 100%;
+		overflow-x: hidden;
+		overflow-x: clip;
+	}
+
 	:global(body) {
 		background: #f5f1e8;
 	}
@@ -622,10 +677,12 @@ const navigation = [
 		--line: #10100d;
 		--line-dark: #10100d;
 		--link: #143d31;
-		width: min(1540px, calc(100% - 48px));
+		width: 100%;
+		max-width: 100%;
 		min-height: 100vh;
 		margin: 0 auto;
-		padding: 34px 0 72px;
+		padding: 34px clamp(16px, 2.25vw, 40px) 72px;
+		overflow-x: clip;
 		color: var(--ink-local);
 	}
 
@@ -699,6 +756,18 @@ const navigation = [
 
 	.frame-line--right {
 		right: -8px;
+	}
+
+	:global(.vertical-core) {
+		position: absolute;
+		top: var(--top-cap-length, 42px);
+		bottom: var(--bottom-cap-length, 42px);
+		left: 50%;
+		display: block;
+		width: var(--core-thickness, 2px);
+		margin-left: calc(var(--core-thickness, 2px) * -0.5);
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--line) 82%, transparent);
 	}
 
 	:global(.vertical-unit) {
@@ -886,6 +955,7 @@ const navigation = [
 	.index-list,
 	.contact-line {
 		grid-column: 2;
+		min-width: 0;
 	}
 
 	.statement {
@@ -1222,6 +1292,7 @@ const navigation = [
 		text-decoration-thickness: 1px;
 		text-underline-offset: 5px;
 		text-transform: uppercase;
+		overflow-wrap: anywhere;
 	}
 
 	.contact-phone {
@@ -1251,7 +1322,9 @@ const navigation = [
 
 	@media (max-width: 900px) {
 		.register-shell {
-			width: min(100% - 24px, 720px);
+			width: 100%;
+			padding-right: 12px;
+			padding-left: 12px;
 		}
 
 		.hero-grid,
