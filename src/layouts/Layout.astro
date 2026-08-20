@@ -52,7 +52,9 @@ import '@fontsource/ibm-plex-mono/latin-700.css';
 		color: var(--ink);
 	}
 
-	* {
+	:global(*),
+	:global(*::before),
+	:global(*::after) {
 		box-sizing: border-box;
 	}
 
