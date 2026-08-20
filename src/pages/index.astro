@@ -455,7 +455,10 @@ const navigation = [
 	const reactiveFrames = document.querySelectorAll<HTMLElement>('[data-reactive-frame]');
 	const reduceFrameMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 	const finePointer = window.matchMedia('(pointer: fine)');
-	const motionEnabled = finePointer.matches && !reduceFrameMotion.matches;
+	const coarsePointer = window.matchMedia('(pointer: coarse)');
+	const desktopMotionEnabled = finePointer.matches && !reduceFrameMotion.matches;
+	const mobileScrollMotionEnabled = coarsePointer.matches && !reduceFrameMotion.matches;
+	const frameMotionAllowed = desktopMotionEnabled || mobileScrollMotionEnabled;
 	const svgNamespace = 'http://www.w3.org/2000/svg';
 	const clamp = (value: number, minimum: number, maximum: number) =>
 		Math.min(maximum, Math.max(minimum, value));
@@ -478,7 +481,7 @@ const navigation = [
 				return {
 					edge,
 					element,
-					moveY: motionEnabled
+					moveY: desktopMotionEnabled
 						? gsap.quickTo(element, 'y', { duration: 0.32, ease: 'power3.out' })
 						: null,
 				};
@@ -490,7 +493,7 @@ const navigation = [
 				const mount = frame.querySelector<HTMLElement>(`[data-frame-line="${edge}"]`);
 				if (!mount) return null;
 
-				const fieldHeight = Math.max(frame.offsetHeight, 160);
+				let fieldHeight = Math.max(frame.offsetHeight, 160);
 				const fragmentThickness = randomBetween(1.6, 2.25);
 				const filterId = `vertical-goo-${frameIndex}-${edgeIndex}`;
 				const svg = createSvgElement('svg');
@@ -542,6 +545,7 @@ const navigation = [
 					baseX: number;
 					baseY: number;
 					baseOpacity: number;
+					densityThreshold: number;
 					moveX: ((value: number) => void) | null;
 					moveY: ((value: number) => void) | null;
 					scaleX: ((value: number) => void) | null;
@@ -550,7 +554,14 @@ const navigation = [
 				}> = [];
 
 				const buildFragmentedLine = () => {
-					const unitCount = clamp(Math.ceil(fieldHeight / 4.4), 36, 180);
+					if (units.length) {
+						gsap.killTweensOf(units.map(({ element }) => element));
+						units.length = 0;
+						fragments.replaceChildren();
+					}
+					setSvgAttributes(svg, { viewBox: `-8 0 16 ${fieldHeight}` });
+					setSvgAttributes(filter, { height: fieldHeight + 24 });
+					const unitCount = clamp(Math.ceil(fieldHeight / 4.4), 36, 420);
 					const step = fieldHeight / unitCount;
 					for (let unitIndex = 0; unitIndex < unitCount; unitIndex += 1) {
 						const isDot = (unitIndex + edgeIndex * 2 + frameIndex) % 8 === 5;
@@ -563,6 +574,8 @@ const navigation = [
 						const baseX = randomBetween(-1.15, 1.15);
 						const baseY = randomBetween(-0.55, 0.55);
 						const baseOpacity = randomBetween(0.68, 0.88);
+						const densityThreshold =
+							(unitIndex * 0.61803398875 + edgeIndex * 0.31 + frameIndex * 0.17) % 1;
 						let unit: SVGGraphicsElement;
 
 						if (isDot) {
@@ -599,19 +612,20 @@ const navigation = [
 							baseX,
 							baseY,
 							baseOpacity,
-							moveX: motionEnabled
+							densityThreshold,
+							moveX: desktopMotionEnabled
 								? gsap.quickTo(unit, 'x', { duration: 0.38, ease: 'power3.out' })
 								: null,
-							moveY: motionEnabled
+							moveY: desktopMotionEnabled
 								? gsap.quickTo(unit, 'y', { duration: 0.38, ease: 'power3.out' })
 								: null,
-							scaleX: motionEnabled
+							scaleX: desktopMotionEnabled
 								? gsap.quickTo(unit, 'scaleX', { duration: 0.4, ease: 'power3.out' })
 								: null,
-							scaleY: motionEnabled
+							scaleY: frameMotionAllowed
 								? gsap.quickTo(unit, 'scaleY', { duration: 0.4, ease: 'power3.out' })
 								: null,
-							fade: motionEnabled
+							fade: frameMotionAllowed
 								? gsap.quickTo(unit, 'opacity', { duration: 0.28, ease: 'power2.out' })
 								: null,
 						});
@@ -619,14 +633,23 @@ const navigation = [
 				};
 
 				buildFragmentedLine();
-				return { edge, units };
+				return {
+					edge,
+					units,
+					rebuild(nextHeight: number) {
+						const safeHeight = Math.max(nextHeight, 160);
+						if (Math.abs(safeHeight - fieldHeight) < 2) return;
+						fieldHeight = safeHeight;
+						buildFragmentedLine();
+					},
+				};
 			})
 			.filter((field): field is NonNullable<typeof field> => Boolean(field));
 
 		return { frame, horizontalLines, verticalFields };
 	});
 
-	if (frameStates.length && motionEnabled) {
+	if (frameStates.length && desktopMotionEnabled) {
 		let pointerX = -1000;
 		let pointerY = -1000;
 		let pointerActive = false;
@@ -693,6 +716,56 @@ const navigation = [
 		};
 		document.documentElement.addEventListener('mouseleave', resetFrameMotion);
 		window.addEventListener('blur', resetFrameMotion);
+	}
+
+	if (frameStates.length && mobileScrollMotionEnabled) {
+		let mobileAnimationFrame = 0;
+
+		const renderMobileFrameDensity = () => {
+			mobileAnimationFrame = 0;
+			const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+			const focusY = viewportHeight * 0.52;
+			const influenceRange = Math.max(viewportHeight * 0.68, 280);
+
+			for (const state of frameStates) {
+				const rect = state.frame.getBoundingClientRect();
+				for (const field of state.verticalFields) {
+					for (const unit of field.units) {
+						const unitY = rect.top + rect.height * unit.ratio;
+						const proximity = clamp(1 - Math.abs(unitY - focusY) / influenceRange, 0, 1);
+						const density = 0.08 + 0.92 * proximity ** 1.35;
+						const visibility = clamp((density - unit.densityThreshold) * 7 + 0.5, 0, 1);
+						unit.fade?.(unit.baseOpacity * visibility);
+						unit.scaleY?.(0.58 + visibility * 0.42);
+					}
+				}
+			}
+		};
+
+		const scheduleMobileFrameDensity = () => {
+			if (!mobileAnimationFrame) {
+				mobileAnimationFrame = requestAnimationFrame(renderMobileFrameDensity);
+			}
+		};
+
+		window.addEventListener('scroll', scheduleMobileFrameDensity, { passive: true });
+		window.addEventListener('resize', scheduleMobileFrameDensity, { passive: true });
+		window.visualViewport?.addEventListener('resize', scheduleMobileFrameDensity, { passive: true });
+		renderMobileFrameDensity();
+	}
+
+	if ('ResizeObserver' in window) {
+		const resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				const state = frameStates.find(({ frame }) => frame === entry.target);
+				if (!state) continue;
+				const nextHeight = entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height;
+				for (const field of state.verticalFields) field.rebuild(nextHeight);
+			}
+			if (mobileScrollMotionEnabled) window.dispatchEvent(new Event('scroll'));
+		});
+
+		for (const state of frameStates) resizeObserver.observe(state.frame);
 	}
 </script>
 
@@ -1438,9 +1511,17 @@ const navigation = [
 	}
 
 	@media (max-width: 520px) {
+		.register-shell {
+			padding: 20px 14px 52px;
+		}
+
 		.hero-grid,
 		.register-grid {
 			grid-template-columns: 1fr;
+		}
+
+		.register-grid {
+			padding: 22px 0 44px;
 		}
 
 		.name-block,
@@ -1485,14 +1566,15 @@ const navigation = [
 		}
 
 		.statement {
-			padding: 26px 18px 24px;
-			font-size: 18px;
+			padding: 24px 14px 22px;
+			font-size: clamp(16px, 4.6vw, 18px);
+			line-height: 1.55;
 		}
 
 		.direction-copy,
 		.contact-line {
-			padding-right: 18px;
-			padding-left: 18px;
+			padding-right: 14px;
+			padding-left: 14px;
 		}
 
 		.index-list {
@@ -1500,23 +1582,67 @@ const navigation = [
 			padding-left: 14px;
 		}
 
+		.statement,
+		.direction-copy,
+		.index-list,
+		.contact-line,
+		.identity-panel,
+		.cv-dossier {
+			min-width: 0;
+			max-width: 100%;
+			overflow-wrap: anywhere;
+		}
+
+		.direction-copy p {
+			font-size: 15px;
+			line-height: 1.65;
+		}
+
+		.index-list a {
+			grid-template-columns: 34px minmax(0, 1fr);
+			column-gap: 10px;
+		}
+
+		.index-title,
+		.index-code,
+		.index-meta {
+			min-width: 0;
+			overflow-wrap: anywhere;
+		}
+
 		.discipline-line {
 			gap: 4px 8px;
 			font-size: 9px;
 		}
 
-		.dossier-toolbar > p span:last-child {
+		.dossier-toolbar {
 			display: none;
 		}
 
+		.dossier-viewport {
+			width: 100%;
+			max-width: 100%;
+			overflow: visible;
+			scroll-snap-type: none;
+			cursor: default;
+		}
+
+		.dossier-track {
+			display: grid;
+			width: 100%;
+		}
+
 		.dossier-card {
-			width: min(82vw, 330px);
-			min-height: 430px;
-			padding-right: 18px;
+			width: 100%;
+			min-height: 0;
+			padding: 20px 0 24px;
+			scroll-snap-align: none;
 		}
 
 		.dossier-card + .dossier-card {
-			padding-left: 18px;
+			padding-left: 0;
+			border-top: 1px solid var(--line);
+			border-left: 0;
 		}
 
 		.keyword-cloud {
