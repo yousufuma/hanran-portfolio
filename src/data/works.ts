@@ -90,20 +90,46 @@ export const works: Work[] = [
 		slug: 'something-big',
 		title: 'SOMETHING BIG IS COMING',
 		year: '2025',
-		medium: 'Unity-based interactive narrative system',
-		tools: ['Unity', 'state management', 'multi-screen media', 'AI-generated video'],
+		medium: 'Unity-based multi-screen meta-media environment',
+		tools: ['Unity', 'state management', 'multi-screen media', 'timed event logic', 'AI-generated video'],
 		keywords: [
 			'state-machine narrative',
-			'multi-screen synchronization',
-			'media triggering',
-			'generative content pipeline',
+			'audiovisual interface orchestration',
+			'anticipatory event logic',
+			'media pools',
 		],
 		description:
-			'An interactive narrative system simulating television, mobile, and surveillance media layers. The work uses state changes, content triggering, multi-screen synchronization, and AI-generated video inserted into a callable media pool.',
+			'Something Big Is Coming is a Unity-based multi-screen environment built around the feeling that an event is always imminent yet never fully arrives. Familiar conventions of television, mobile media, and surveillance imagery coexist within the same system, but no single channel provides a complete account. Dialogue prompts, timed interruptions, and changing screen states repeatedly redirect attention, turning anticipation itself into the narrative condition of the work.',
 		researchRelevance:
-			'This project supports my research on state-machine narrative, real-time media orchestration, and generative content pipelines.',
+			'Rather than using Unity only to display finished videos, the work treats the game engine as an artistic infrastructure that coordinates states, timing, interface prompts, and media behaviour in real time. It became an early methodological prototype for my research into state-based narrative and audiovisual interface orchestration, demonstrating how relations among screens can organise pacing, hesitation, agency, and interpretation.',
 		displayMode: 'video-gallery',
 		externalLink: 'https://www.youtube.com/watch?v=m759ME5VyTw',
+		details: [
+			{
+				label: 'Narrative premise',
+				title: 'Anticipation becomes the event',
+				body:
+					'The title names both a promise and a delay. Instead of leading toward one decisive revelation, the work sustains a condition of expectation through alerts, fragments, pauses, and partial messages. The participant encounters an environment that appears to be preparing for an event whose scale and meaning remain uncertain. This suspended media anxiety shifts narrative away from a fixed plot and toward the gradual recognition of how the system behaves.',
+			},
+			{
+				label: 'Screen relations',
+				title: 'No screen functions as a neutral display',
+				body:
+					'Television, mobile, and surveillance channels operate simultaneously as distinct but connected layers. A dialogue interface and timed media events direct attention from one channel to another, while state changes alter what can appear and when. Meaning is produced through these relations: repetition can create pressure, an interruption can recast an earlier image, and an apparently secondary screen can become the centre of the encounter. The interface therefore acts as an audiovisual and temporal composition rather than a simple control panel.',
+			},
+			{
+				label: 'Media system',
+				title: 'Prepared fragments are organised as callable pools',
+				body:
+					'Video, image, text, and AI-generated fragments are stored within media pools and activated by artist-authored rules. Unity coordinates their timing, recurrence, and placement across the screen environment in real time. The generative dimension lies in this bounded recombination: the system can produce variable encounters without being treated as independently intentional. AI-generated material is one source within the wider composition, while artistic decisions about selection, constraint, sequence, and context continue to determine how each fragment functions.',
+			},
+			{
+				label: 'Research connection',
+				title: 'A prototype for audiovisual interface orchestration',
+				body:
+					'Within my wider research, Something Big Is Coming provides prior practice evidence for treating game engines as artistic infrastructures. Its media pools, multi-screen relations, timing structures, and anticipatory event logic show how an engine can organise attention and narrative across an unstable audiovisual field. The project informs my continuing investigation of state-based narrative, real-time media orchestration, and generative media systems, while remaining a methodological prototype rather than a completed outcome of the proposed PhD research.',
+			},
+		],
 		video: {
 			provider: 'youtube',
 			embedUrl: 'https://www.youtube.com/embed/m759ME5VyTw?si=I-V7DHMcOf44dpwf',
