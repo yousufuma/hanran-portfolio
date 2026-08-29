@@ -104,6 +104,14 @@ export const works: Work[] = [
 			'Rather than using Unity only to display finished videos, the work treats the game engine as an artistic infrastructure that coordinates states, timing, interface prompts, and media behaviour in real time. It became an early methodological prototype for my research into state-based narrative and audiovisual interface orchestration, demonstrating how relations among screens can organise pacing, hesitation, agency, and interpretation.',
 		displayMode: 'video-gallery',
 		externalLink: 'https://www.youtube.com/watch?v=m759ME5VyTw',
+		links: [
+			{
+				label: 'Play on itch.io',
+				href: 'https://yousufuma.itch.io/something-big-is-coming',
+				note: 'Launch the browser version',
+				primary: true,
+			},
+		],
 		details: [
 			{
 				label: 'Narrative premise',
