@@ -47,22 +47,84 @@ export const works: Work[] = [
 	{
 		slug: 'other-side-wall',
 		title: 'On the Other Side of the Wall',
-		year: '2022 / 2026 research article case',
-		medium: 'Unity-based experimental walking simulation',
-		tools: ['Unity', 'C#', 'dialogue-driven interaction', 'looping scene control'],
+		year: '2022 / 2026 published case study',
+		medium: 'Unity-based first-person experimental walking simulation',
+		tools: ['Unity', 'C#', 'modular scene control', 'dialogue system', 'dynamic media playback'],
 		keywords: [
-			'walking simulation',
-			'scene control',
+			'constrained traversal',
 			'dialogue-gated progression',
-			'looping reset',
-			'modular runtime system',
+			'looping scene control',
+			'interaction grammar',
+			'environmental storytelling',
 		],
 		description:
-			'A Unity-based experimental walking simulation built around constrained traversal, dialogue-gated progression, looping reset structures, fade-and-teleport transitions, and embedded generative media.',
+			'On the Other Side of the Wall links domestic, educational, workplace, and transit spaces into a constrained first-person journey. Walls and dialogue nodes regulate passage, while repeated return, fade-and-teleport transitions, and media embedded in screens and windows turn movement, delay, and access into the central material of the work.',
 		researchRelevance:
-			'This work became the basis of my accepted paper on Unity-based experimental scene control, showing how small-scale interactive artworks can produce transferable technical and artistic knowledge.',
+			'The project underpins my published 2026 case study on Unity-based experimental scene control. By making the implementation layer visible, it demonstrates how a small set of reusable scripts can support coherent progression, environmental rhythm, and transferable practice knowledge without large-scale production resources.',
 		displayMode: 'video-gallery',
 		externalLink: 'https://www.youtube.com/watch?v=i--eS11sY6E',
+		links: [
+			{
+				label: 'Play on itch.io',
+				href: 'https://yousufuma.itch.io/wall',
+				note: 'Launch the browser experience',
+				primary: true,
+			},
+			{
+				label: 'Read the published article',
+				href: 'https://www.clausiuspress.com/article/17816.html',
+				note: 'Full case study and implementation analysis',
+			},
+			{
+				label: 'Watch the documentation',
+				href: 'https://www.youtube.com/watch?v=i--eS11sY6E',
+				note: 'Video walkthrough on YouTube',
+			},
+		],
+		details: [
+			{
+				label: 'Project overview',
+				title: 'The wall is both an image and an operating condition',
+				body:
+					'The work reorganises familiar domestic, educational, workplace, and transit environments as a linked experiential sequence rather than as documentary reconstructions. Its segmented circular layout keeps the route compact while allowing outer zones to remain visible but partly inaccessible. The wall is therefore more than a visual motif: it is a progression threshold that makes enclosure, exterior visibility, and negotiated passage structurally present.',
+			},
+			{
+				label: 'Interaction grammar',
+				title: 'Approach, prompt, input, response',
+				body:
+					'A shared detect-prompt-trigger pattern gives different objects the same readable interaction rhythm. Dialogue is not optional narrative decoration; it validates movement between zones and temporarily suspends other input so that repeated triggers cannot destabilise the current state. The player learns how to act without extensive tutorialisation, while uncertainty remains focused on when and where progression will become possible.',
+				items: [
+					'Approach an interactive object or spatial threshold.',
+					'Read the prompt and activate its dialogue or scene condition.',
+					'Complete the interaction to unlock a transition or environmental update.',
+					'Re-enter familiar space after the system has changed its state.',
+				],
+			},
+			{
+				label: 'System design',
+				title: 'Small modules coordinate a continuous experience',
+				body:
+					'Unity holds movement, prompts, dialogue states, transitions, dynamic media, and scene updates within one layered runtime system. A base interaction script handles common behaviour, while focused modules extend it for particular situations. The design avoids a large collection of bespoke mechanics and instead relies on interoperable parts that remain easier to test, revise, and document.',
+				items: [
+					'Loop-and-reset logic returns the player and recalibrates selected dialogue and interaction states.',
+					'Fade-and-teleport transitions stage movement between segmented spaces without an abrupt break.',
+					'Ladder controls adapt movement and camera behaviour for vertical traversal.',
+					'Dynamic exterior spawning and embedded AI-generated video imply activity beyond the playable route.',
+				],
+			},
+			{
+				label: 'Experience analysis',
+				title: 'Restriction makes progression perceptible',
+				body:
+					'Exploration is guided rather than fully open. Players encounter places that are visible before they are accessible, or familiar before they are functionally altered, producing delay and negotiation instead of conventional challenge. Repetition organises the environment rhythmically, while state-linked motion, light, and screen media make system changes legible at the level of atmosphere as well as interface.',
+			},
+			{
+				label: 'Research contribution',
+				title: 'An artwork that also documents a method',
+				body:
+					'The project shows how an independent interactive artwork can generate reusable technical knowledge when its middle layer - prompt behaviour, gating logic, reset conditions, and transition control - is made explicit. The published study presents this as a practice-based, low-cost model rather than a universal solution: it examines one PC-based case without a full user-study dataset, while opening the system to future testing, comparison, and adaptation for installation or public contexts.',
+			},
+		],
 		video: {
 			provider: 'youtube',
 			embedUrl: 'https://www.youtube.com/embed/i--eS11sY6E?si=jv5iqvk0YT6GEbJO',
@@ -71,18 +133,18 @@ export const works: Work[] = [
 		images: [
 			{
 				src: '/images/works/other-side-wall-01.png',
-				alt: 'Documentation image 01 for On the Other Side of the Wall',
-				caption: 'scene control study / image 01',
+				alt: 'Domestic interior with a wall-mounted screen in On the Other Side of the Wall',
+				caption: 'embedded media in the domestic zone / image 01',
 			},
 			{
 				src: '/images/works/other-side-wall-02.png',
-				alt: 'Documentation image 02 for On the Other Side of the Wall',
-				caption: 'looping reset structure / image 02',
+				alt: 'Narrow exterior threshold framed by walls and overhead wires in On the Other Side of the Wall',
+				caption: 'visible but constrained exterior / image 02',
 			},
 			{
 				src: '/images/works/other-side-wall-03.png',
-				alt: 'Documentation image 03 for On the Other Side of the Wall',
-				caption: 'runtime environment / image 03',
+				alt: 'Disordered classroom environment in On the Other Side of the Wall',
+				caption: 'educational space within the looped route / image 03',
 			},
 		],
 	},
