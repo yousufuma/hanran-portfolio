@@ -320,18 +320,57 @@ export const works: Work[] = [
 		slug: 'eggs-eggs-eggs',
 		title: "Children's System: Eggs Eggs Eggs",
 		year: '2020',
-		medium: 'multimedia art education project',
-		tools: ['3D printing', 'sensors', 'sound', 'light', 'participatory workshop'],
+		medium: 'Participatory multimedia installation and six-month art education project',
+		tools: ['3D sculpting', '3D printing', 'Max/MSP', 'sensors', 'sound-reactive light', 'found objects'],
 		keywords: [
-			'ritual environment',
-			"children's cognition",
-			'participatory art',
-			'physical-digital system',
+			'child-authored symbols',
+			'participatory ritual',
+			'field recording',
+			'physical-digital installation',
+			'embodied interaction',
 		],
 		description:
-			'A six-month multimedia art education project conducted with three school-age children, constructing a physical-digital altar through drawing, storytelling, 3D printing, sensors, sound, and light.',
+			"Commissioned by Yuan Art Museum, Chongqing, for the 2020 O'Kids International Children's Art Festival, Children's System: Eggs Eggs Eggs was developed over six months with three primary-school children. Their recordings, stories, sculpted deities, and selected household objects were brought together as an altar-like physical-digital environment activated through percussion, sound, responsive light, and collective participation.",
 		researchRelevance:
-			'This project informs my interest in how interactive environments organize perception, symbolic structures, and embodied understanding.',
+			"The project is an early investigation into how an interactive environment can organise perception, symbolic invention, and embodied participation across digital and physical media. It also established a collaborative method that begins with children's situated listening and self-generated forms, then translates those materials into a responsive public system without treating technology as a neutral display tool.",
+		details: [
+			{
+				label: 'Project framework',
+				title: 'Three children co-authored an altar-like environment',
+				body:
+					"Created for the 2020 O'Kids International Children's Art Festival at Yuan Art Museum in Chongqing, the project invited three primary-school children to develop personal symbolic figures from the sounds and spaces of their homes. I introduced the working concepts and designed the technical and spatial framework, while the children's recordings, choices, and sculptural decisions supplied the installation's central forms. The resulting environment was conceived as a provisional altar: not the representation of an existing faith, but a system assembled through collaboration.",
+			},
+			{
+				label: 'Child-authored forms',
+				title: 'Listening preceded the creation of each deity',
+				body:
+					"Each participant collected sounds from their immediate living environment and listened to a composition made from those recordings while developing a three-dimensional figure. The quiet, sustained listening session was intended to loosen deliberate illustration and make room for more intuitive associations. I preserved the children's forms through 3D printing and suspended the three translucent sculptures above the installation as its deities.",
+			},
+			{
+				label: 'Sound process',
+				title: 'Domestic recordings became a changing percussive score',
+				body:
+					"The children produced and selected sounds that, for them, expressed the character of home. I sampled this material and placed it in a randomised Max/MSP sequencer, creating a shifting, percussion-led composition. The score accompanied the sculpting sessions and continued throughout the exhibition, connecting the private process of listening with the installation's public rhythm.",
+				items: [
+					'Collect sounds from each child’s everyday surroundings.',
+					'Recompose the recordings through a rule-based Max/MSP sequence.',
+					'Use the evolving score to support intuitive 3D sculpting.',
+					'Return the same sound world to the gallery as an invitation to act.',
+				],
+			},
+			{
+				label: 'Audience interaction',
+				title: 'Found objects turned spectators into participants',
+				body:
+					"The children each chose household objects for the quality of their struck sound. Arranged at the centre of the installation, these discarded objects became the primary interface: visitors could play along with the recorded composition and take part in the emerging ritual. Reflective surrounding panels multiplied bodies and light, while sensors mapped changes in volume and frequency to coloured illumination, giving the improvised percussion a spatial visual response.",
+			},
+			{
+				label: 'Artistic proposition',
+				title: 'Technical systems were used to approach belief and symbolic formation',
+				body:
+					"The work continues my interest in addressing religion, folk belief, and transcendence through the instruments of rational and computational culture. Computer music, 3D fabrication, sensing, and responsive lighting were used to construct an intentionally noisy and unstable symbolic system that echoes the intensity of mystical and shamanic practices without reproducing a specific tradition. Working with children offered a way to examine how symbols might emerge before they become fully settled by adult convention, while the installation tested how those private inventions change when they enter a shared, performative space.",
+			},
+		],
 		galleryMode: 'carousel',
 		video: {
 			provider: 'vimeo',
@@ -343,18 +382,53 @@ export const works: Work[] = [
 		images: [
 			{
 				src: '/images/works/eggs-eggs-eggs-01.jpeg',
-				alt: "Documentation image 01 for Children's System: Eggs Eggs Eggs",
-				caption: 'workshop documentation / image 01',
+				alt: "Front view of Children's System: Eggs Eggs Eggs with suspended sculptures, reflective panels, lights, and found objects",
+				caption: 'completed installation at Yuan Art Museum / image 01',
 			},
 			{
 				src: '/images/works/eggs-eggs-eggs-02.jpeg',
-				alt: "Documentation image 02 for Children's System: Eggs Eggs Eggs",
-				caption: 'physical-digital construction / image 02',
+				alt: "Illuminated translucent deity suspended above Children's System: Eggs Eggs Eggs",
+				caption: 'suspended 3D-printed deity / image 02',
 			},
 			{
 				src: '/images/works/eggs-eggs-eggs-03.JPG',
-				alt: "Documentation image 03 for Children's System: Eggs Eggs Eggs",
-				caption: 'participatory environment / image 03',
+				alt: "Close view of a translucent child-authored deity in Children's System: Eggs Eggs Eggs",
+				caption: 'child-authored deity in the installation / image 03',
+			},
+			{
+				src: '/images/works/eggs-eggs-eggs-interaction.gif',
+				alt: "Animated documentation of responsive light and audience percussion in Children's System: Eggs Eggs Eggs",
+				caption: 'sound-reactive installation in motion / image 04',
+			},
+			{
+				src: '/images/works/eggs-eggs-eggs-installation-view-02.jpg',
+				alt: "Front view of the completed Children's System: Eggs Eggs Eggs installation",
+				caption: 'completed installation and found-object instruments / image 05',
+			},
+			{
+				src: '/images/works/eggs-eggs-eggs-workshop.jpg',
+				alt: 'Artist and child collaborator reviewing a three-dimensional model on a laptop',
+				caption: 'collaborative 3D sculpting process / image 06',
+			},
+			{
+				src: '/images/works/eggs-eggs-eggs-idol-render-01.jpg',
+				alt: 'Digital render of the first child-authored deity',
+				caption: 'child-authored deity model 01 / image 07',
+			},
+			{
+				src: '/images/works/eggs-eggs-eggs-idol-render-02.jpg',
+				alt: 'Digital render of the second child-authored deity',
+				caption: 'child-authored deity model 02 / image 08',
+			},
+			{
+				src: '/images/works/eggs-eggs-eggs-idol-render-03.jpg',
+				alt: 'Digital render of the third child-authored deity',
+				caption: 'child-authored deity model 03 / image 09',
+			},
+			{
+				src: '/images/works/eggs-eggs-eggs-installation-visualisation.jpg',
+				alt: "Design visualisation of the altar-like Children's System: Eggs Eggs Eggs installation",
+				caption: 'installation design visualisation / image 10',
 			},
 		],
 	},
