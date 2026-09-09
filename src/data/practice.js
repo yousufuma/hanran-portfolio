@@ -160,6 +160,36 @@ export const practiceProjects = [
 		displayMode: 'video',
 	},
 	{
+		id: 'you-n-me',
+		title: 'You n Me',
+		chineseTitle: null,
+		alternativeTitle: null,
+		year: '2021 / revised 2026',
+		type: 'web sculpture / browser-based interactive work',
+		medium: 'interactive webpage, real-time 3D graphics, generative text and image',
+		tools: ['p5.js', 'JavaScript', 'HTML/CSS'],
+		keywords: [
+			'web sculpture',
+			'networked identity',
+			'digital body',
+			'generative typography',
+			'browser-based art',
+			'reconstruction',
+		],
+		description:
+			'You n Me is a web sculpture first created in 2021. Originally developed with p5.js, the work brings fragmented bodies, shifting surfaces, and repeated language together in a browser-based space, where the encounter between “you” and “me” remains unstable and continually re-formed.',
+		artisticRelevance:
+			'The work treats the webpage as a sculptural environment rather than a neutral container. Figures, text, depth, and movement form a mutable digital object that can be entered through the screen and experienced through navigation.',
+		researchRelevance:
+			'The version shown here was revised and rebuilt in 2026 after the server that hosted the original work closed. Reconstructing it became part of the work itself, foregrounding the fragility of browser-based artworks and the dependence of digital memory on changing technical infrastructure.',
+		images: [],
+		video:
+			'https://player.vimeo.com/video/1225315117?badge=0&autopause=0&player_id=0&app_id=58479',
+		externalLink: 'https://vimeo.com/1225315117',
+		playLink: 'https://younme-ten.vercel.app',
+		displayMode: 'video',
+	},
+	{
 		id: 'other-works',
 		title: 'Other Works',
 		chineseTitle: '其他作品',
