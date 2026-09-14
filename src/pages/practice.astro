@@ -112,10 +112,10 @@ const otherWorksNote =
 										</div>
 									)}
 
-								{project.externalLink && !project.externalLink.includes('PLACEHOLDER') && (
+								{!project.links && project.externalLink && !project.externalLink.includes('PLACEHOLDER') && (
 									<a class="media-link" href={project.externalLink}>watch video documentation</a>
 								)}
-								{project.playLink && <a class="media-link" href={project.playLink}>open playable version</a>}
+								{!project.links && project.playLink && <a class="media-link" href={project.playLink}>open playable version</a>}
 							</div>
 
 							<div class="text-column">
@@ -125,6 +125,26 @@ const otherWorksNote =
 									{project.chineseTitle && <p class="chinese-title">{project.chineseTitle}</p>}
 									{project.alternativeTitle && <p class="alternative-title">{project.alternativeTitle}</p>}
 								</header>
+
+								{project.links && (
+									<nav class="project-links" aria-label={`${project.title} project links`}>
+										{project.links.map((link, linkIndex) => (
+											<a
+												class:list={['project-link', link.primary && 'is-primary']}
+												href={link.href}
+												target="_blank"
+												rel="noreferrer"
+											>
+												<span>{String(linkIndex + 1).padStart(2, '0')}</span>
+												<span class="project-link-copy">
+													<b>{link.label}</b>
+													<small>{link.note}</small>
+												</span>
+												<span aria-hidden="true">↗</span>
+											</a>
+										))}
+									</nav>
+								)}
 
 								<dl class="project-data">
 									<div>
@@ -143,7 +163,7 @@ const otherWorksNote =
 										<dt>keywords</dt>
 										<dd>{project.keywords.join(', ')}</dd>
 									</div>
-									{project.externalLink && !project.externalLink.includes('PLACEHOLDER') && (
+									{!project.links && project.externalLink && !project.externalLink.includes('PLACEHOLDER') && (
 										<div>
 											<dt>external video link</dt>
 											<dd>
@@ -180,6 +200,27 @@ const otherWorksNote =
 									)}
 								</section>
 							</div>
+
+							{project.details && (
+								<section class="project-details" aria-label={`${project.title} systems`}>
+									<header class="project-details-heading">
+										<p>image systems</p>
+										<h3>{project.detailsTitle}</h3>
+									</header>
+									{project.details.map((detail, detailIndex) => (
+										<section class="project-detail-row">
+											<div class="project-detail-label">
+												<span>{String(detailIndex + 1).padStart(2, '0')}</span>
+												<p>{detail.label}</p>
+											</div>
+											<div class="project-detail-copy">
+												<h4>{detail.title}</h4>
+												<p>{detail.body}</p>
+											</div>
+										</section>
+									))}
+								</section>
+							)}
 						</>
 						)}
 					</article>
@@ -577,6 +618,69 @@ const otherWorksNote =
 		text-transform: none;
 	}
 
+	.project-links {
+		display: grid;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.project-link {
+		display: grid;
+		grid-template-columns: 28px minmax(0, 1fr) auto;
+		gap: 12px;
+		align-items: center;
+		min-height: 64px;
+		padding: 10px 0;
+		border-bottom: 1px solid var(--line-local);
+		color: var(--link-local);
+		font-family: var(--font-mono);
+		font-size: 10px;
+		line-height: 1.35;
+		letter-spacing: 0.04em;
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+
+	.project-link:last-child {
+		border-bottom: 0;
+	}
+
+	.project-link.is-primary {
+		color: var(--ink-local);
+	}
+
+	.project-link-copy {
+		display: grid;
+		gap: 4px;
+	}
+
+	.project-link b,
+	.project-link small {
+		font: inherit;
+	}
+
+	.project-link b {
+		font-weight: 700;
+	}
+
+	.project-link small {
+		color: var(--muted-local);
+		text-transform: none;
+	}
+
+	.project-link:hover,
+	.project-link:focus-visible {
+		padding-right: 6px;
+		padding-left: 6px;
+		background: var(--ink-local);
+		color: var(--paper-local);
+		outline: none;
+	}
+
+	.project-link:hover small,
+	.project-link:focus-visible small {
+		color: var(--paper-local);
+	}
+
 	.project-data {
 		display: grid;
 		border-bottom: 1px solid var(--line-local);
@@ -626,6 +730,79 @@ const otherWorksNote =
 		letter-spacing: 0.008em;
 	}
 
+	.project-details {
+		grid-column: 1 / -1;
+		margin-top: 26px;
+		border-top: 2px solid var(--line-local);
+	}
+
+	.project-details-heading,
+	.project-detail-row {
+		display: grid;
+		grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+		gap: 34px;
+	}
+
+	.project-details-heading {
+		align-items: end;
+		padding: 18px 0 22px;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.project-details-heading p,
+	.project-detail-label {
+		color: var(--muted-local);
+		font-family: var(--font-mono);
+		font-size: 10px;
+		line-height: 1.35;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.project-details-heading h3 {
+		max-width: 28ch;
+		font-size: clamp(19px, 2.2vw, 28px);
+		font-weight: 400;
+		line-height: 1.18;
+		letter-spacing: 0.025em;
+	}
+
+	.project-detail-row {
+		padding: 24px 0 30px;
+		border-bottom: 1px solid var(--line-local);
+	}
+
+	.project-detail-label {
+		display: grid;
+		grid-template-columns: 30px minmax(0, 1fr);
+		gap: 14px;
+		align-content: start;
+	}
+
+	.project-detail-label span {
+		color: var(--ink-local);
+	}
+
+	.project-detail-copy {
+		display: grid;
+		gap: 14px;
+		max-width: 68ch;
+	}
+
+	.project-detail-copy h4 {
+		margin: 0;
+		font-size: clamp(17px, 1.65vw, 22px);
+		font-weight: 400;
+		line-height: 1.28;
+		letter-spacing: 0.015em;
+	}
+
+	.project-detail-copy p {
+		margin: 0;
+		font-size: clamp(14px, 1.2vw, 16px);
+		line-height: 1.72;
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.gallery-grid img,
 		.student-wall img {
@@ -658,6 +835,10 @@ const otherWorksNote =
 			gap: 34px;
 		}
 
+		.project-details {
+			grid-column: 1;
+		}
+
 		.student-wall {
 			grid-template-columns: repeat(4, 1fr);
 		}
@@ -687,6 +868,12 @@ const otherWorksNote =
 		.project-data div {
 			grid-template-columns: 1fr;
 			gap: 4px;
+		}
+
+		.project-details-heading,
+		.project-detail-row {
+			grid-template-columns: 1fr;
+			gap: 16px;
 		}
 	}
 </style>

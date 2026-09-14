@@ -105,27 +105,70 @@ export const practiceProjects = [
 		chineseTitle: '2001年我第一次来到互联网上',
 		alternativeTitle: null,
 		year: '2023',
-		type: 'shader painting / Unity-based real-time image system',
-		medium: 'Unity shader painting, real-time generated image, video documentation',
-		tools: ['Unity', 'Shader', 'C#', 'real-time graphics'],
+		type: 'real-time interactive painting / Unity-based image system',
+		medium:
+			'real-time computer-generated image, shader-generated landscape, sound-reactive digital rain, webcam image, video documentation',
+		tools: ['Unity', 'Shader', 'C#', 'webcam input', 'sound-reactive system'],
 		keywords: [
 			'early internet aesthetics',
-			'shader painting',
-			'real-time image',
-			'procedural landscape',
+			'real-time painting',
+			'cultural symbol',
+			'procedural repetition',
+			'interactive gaze',
 			'Windows XP',
-			'computer graphics nostalgia',
+			'digital nostalgia',
 		],
 		description:
-			'In 2001, I Came to the Internet for the First Time is a Unity-based shader painting project. In this work, shader language is treated as a painting medium rather than only a technical rendering tool.',
+			'In 2001, I Came to the Internet for the First Time is a real-time interactive painting made with computer technology. Beginning with the artist’s memory of having a PC at home for the first time in 2001, the work reconstructs a group of powerful, widely circulated cultural symbols: the yellow smiley, digital rain, the Windows grassland, and the viewer’s own image.',
 		artisticRelevance:
-			'The image is generated and transformed in real time: a large yellow face moves through a computer-generated world, evoking the visual memory of early internet icons, chat interfaces, and Windows XP-like digital landscapes.',
+			'Here, painting is not a fixed surface but an image continuously assembled by rules, inputs, and computation. Familiar signs are made strange through exaggeration and repetition, producing a fairy-tale and nostalgic scene that appears metaphorical while resisting a single, complete interpretation.',
 		researchRelevance:
-			'The project explores game engines as image-making systems and anticipates my later concern with real-time visual orchestration, shader-based media, and Unity as artistic infrastructure.',
+			'The project asks how technical systems can reconstruct collective visual memory and how the rules embedded in an interactive image can position its viewer. Rather than using Unity only to simulate a world, the work treats the engine, shader, sound input, and camera as materials within a painting.',
 		images: [],
 		video: 'https://player.vimeo.com/video/1191446281?h=96be9d1bd9',
 		externalLink: 'https://vimeo.com/1191446281',
-		playLink: null,
+		playLink: 'https://yousufuma.itch.io/2001',
+		links: [
+			{
+				label: 'Open the online work',
+				note: 'Interactive browser version on itch.io',
+				href: 'https://yousufuma.itch.io/2001',
+				primary: true,
+			},
+			{
+				label: 'Watch video documentation',
+				note: 'Vimeo documentation',
+				href: 'https://vimeo.com/1191446281',
+				primary: false,
+			},
+		],
+		detailsTitle: 'Four systems of a real-time painting',
+		details: [
+			{
+				label: 'system 01 / the smile',
+				title: 'A smile the viewer cannot remove',
+				body:
+					'The central yellow face draws from social-software icons and Harvey Ball’s smiley, which became a durable symbol of capitalist commodification. The viewer’s facial expression controls the figure, yet its exaggerated smile never disappears. The interaction reverses the expected relationship between user and product: the viewer acts, but only inside a rule the image has already prescribed.',
+			},
+			{
+				label: 'system 02 / digital rain',
+				title: 'A permeable screen for network space',
+				body:
+					'The sound-controlled digital rain refers to The Matrix and combines with the continuously generated Windows grassland to construct a networked space. It reads at once as data and as a barrier between digital image and physical viewer. Its green colour also points toward the “Green Dam” in the experience of Chinese internet users.',
+			},
+			{
+				label: 'system 03 / grassland',
+				title: 'Endless variation without arrival',
+				body:
+					'A shader continuously generates and changes the grassland. No frame is identical, but every frame remains close to the computer-desktop landscape held in popular memory. Generation becomes repetition: technically active and visually changeable, yet deliberately without development or resolution.',
+			},
+			{
+				label: 'system 04 / camera eyes',
+				title: 'The viewer placed inside the image',
+				body:
+					'Live camera imagery is used as the texture of the figure’s eyes. The viewer encounters their own image at the point from which the painted figure appears to look back. This direct, almost blunt operation incorporates the act of viewing into the painting and makes spectatorship one of its visible materials.',
+			},
+		],
 		displayMode: 'video',
 	},
 	{
