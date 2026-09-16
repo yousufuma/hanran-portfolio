@@ -8,7 +8,7 @@ export const practiceProjects = [
 		type: 'interactive installation / AR application / video essay',
 		medium:
 			'computer program, smartphone-based AR application, interactive installation, video essay',
-		tools: ['Unity', 'Arduino', 'Max/MSP', '3D printing', 'AR', 'C++'],
+		tools: ['Unity', 'Arduino', 'Max/MSP', '3D printing', 'C++'],
 		keywords: [
 			'computational folk belief',
 			'programmed deity',
@@ -30,76 +30,6 @@ export const practiceProjects = [
 		displayMode: 'video',
 	},
 	{
-		id: 'the-scriptures-for-the-souls-journey',
-		title: "The Scriptures for the Soul's Journey",
-		chineseTitle: '指路经',
-		alternativeTitle: 'Yi Soul-Summoning Ritual for a Broken Computer',
-		year: '2023-2024',
-		type: 'short film / interactive video / student-collaborative project',
-		medium:
-			'video, ritual performance, TouchDesigner-based interactive visuals, urban technological fiction',
-		tools: [
-			'TouchDesigner',
-			'video production',
-			'interactive visual system',
-			'audio-reactive graphics',
-			'gesture-triggered particles',
-		],
-		keywords: [
-			'Yi ritual',
-			'Nisu soul-summoning',
-			'Bimo',
-			'technological failure',
-			'computer repair',
-			'ritual interface',
-			'TouchDesigner',
-			'urban technology',
-			'symbolic healing',
-		],
-		description:
-			'The Scriptures for the Soul\'s Journey is a short film and interactive media project developed around a symbolic repair ritual for a malfunctioning computer. The work draws from the soul-summoning ritual of the Yi / Nisu tradition and places it within a contemporary urban technological context. In the project, a computer failure is treated not only as a technical problem, but as a state of symbolic "soul loss," opening a space where ritual, repair, and digital media overlap.',
-		artisticRelevance:
-			'The work repositions a traditional religious ritual within the everyday experience of technological breakdown. Through performance, video, and TouchDesigner-based interactive visuals, the project transforms the act of repairing a computer into a ritualized process of calling, guiding, and restoring. It reflects on the anxiety and helplessness that emerge when humans face technologies they cannot fully control.',
-		researchRelevance:
-			'Although this project is not part of my main PhD research proposal, it is closely connected to my broader practice in interactive media and technical ritual systems. It extends my long-term interest in how symbolic structures, procedural actions, visual systems, and interactive technologies can reorganize belief, uncertainty, and human-machine relations.',
-		credit: 'Created in collaboration with / under the guidance of Hanran Ma and Ji Yuxin.',
-		images: [],
-		video: 'https://player.vimeo.com/video/1191576425?badge=0&autopause=0&player_id=0&app_id=58479',
-		externalLink: 'https://vimeo.com/1191576425',
-		playLink: null,
-		displayMode: 'video',
-	},
-	{
-		id: 'the-sound-of-the-waves-still-remains',
-		title: 'The Sound of the Waves Still Remains',
-		chineseTitle: '涛声依旧',
-		alternativeTitle: null,
-		year: '2021',
-		type: 'video / multimedia urban study',
-		medium: 'video, field recording, urban image, spatial observation',
-		tools: ['Final Cut Pro', 'Ableton Live', 'Blender'],
-		keywords: [
-			'urban slice',
-			'Chongqing',
-			'situationism',
-			'vertical city',
-			'field recording',
-			'urban ecology',
-			'multimedia geography',
-		],
-		description:
-			"The Sound of the Waves Still Remains is a video-based multimedia project that examines a vertical section of Chongqing's urban environment. Drawing from Situationist theory and from the geological method of reading cross-sections, the work treats the city not as a flat map, but as a layered spatial volume.",
-		artisticRelevance:
-			'The project follows the coexistence of riverbanks, slopes, residential buildings, farmland, parks, infrastructure, and older historical traces within a single urban section. Rather than presenting the city as a continuous urban surface, it observes how different temporalities and spatial orders are compressed into one vertical rhythm.',
-		researchRelevance:
-			'This work is important to my broader practice because it shows an early method of treating place as a structured media system. Its attention to urban layers, spatial perception, and media-based reconstruction anticipates my later work with game engines, virtual environments, and modular spatial systems.',
-		images: [],
-		video: 'https://www.youtube.com/embed/wELL88EjBi0?si=mSm5jcA0AJEcKt34',
-		externalLink: 'https://youtu.be/wELL88EjBi0?si=mSm5jcA0AJEcKt34',
-		playLink: null,
-		displayMode: 'video',
-	},
-	{
 		id: 'in-2001-i-came-to-the-internet',
 		title: 'In 2001, I Came to the Internet for the First Time',
 		chineseTitle: '2001年我第一次来到互联网上',
@@ -108,7 +38,7 @@ export const practiceProjects = [
 		type: 'real-time interactive painting / Unity-based image system',
 		medium:
 			'real-time computer-generated image, shader-generated landscape, sound-reactive digital rain, webcam image, video documentation',
-		tools: ['Unity', 'Shader', 'C#', 'webcam input', 'sound-reactive system'],
+		tools: ['Unity', 'C#'],
 		keywords: [
 			'early internet aesthetics',
 			'real-time painting',
@@ -172,6 +102,90 @@ export const practiceProjects = [
 		displayMode: 'video',
 	},
 	{
+		id: 'you-n-me',
+		title: 'You n Me',
+		chineseTitle: null,
+		alternativeTitle: null,
+		year: '2021 / reconstructed 2026',
+		type: 'Web Sculpture · Networked Interactive Work · Browser-based Art',
+		medium: 'interactive webpage, live camera image, real-time 3D graphics, networked participation',
+		tools: ['p5.js', 'JavaScript', 'HTML/CSS', 'browser camera APIs', 'p5LiveMedia', 'SimplePeer', 'Socket.IO'],
+		keywords: [
+			'web sculpture', 'networked presence', 'digital body', 'social sculpture',
+			'browser-based art', 'live camera', 'collective image', 'reconstruction', 'digital preservation',
+		],
+		images: [],
+		video:
+			'https://player.vimeo.com/video/1225315117?badge=0&autopause=0&player_id=0&app_id=58479',
+		externalLink: 'https://vimeo.com/1225315117',
+		playLink: 'https://younme-ten.vercel.app',
+		displayMode: 'video',
+	},
+	{
+		id: 'the-scriptures-for-the-souls-journey',
+		title: "The Scriptures for the Soul's Journey",
+		chineseTitle: '指路经',
+		alternativeTitle: 'Yi Soul-Summoning Ritual for a Broken Computer',
+		year: '2023-2024',
+		type: 'short film / interactive video / student-collaborative project',
+		medium:
+			'video, ritual performance, TouchDesigner-based interactive visuals, urban technological fiction',
+		tools: ['TouchDesigner'],
+		keywords: [
+			'Yi ritual',
+			'Nisu soul-summoning',
+			'Bimo',
+			'technological failure',
+			'computer repair',
+			'ritual interface',
+			'TouchDesigner',
+			'urban technology',
+			'symbolic healing',
+		],
+		description:
+			'The Scriptures for the Soul\'s Journey is a short film and interactive media project developed around a symbolic repair ritual for a malfunctioning computer. The work draws from the soul-summoning ritual of the Yi / Nisu tradition and places it within a contemporary urban technological context. In the project, a computer failure is treated not only as a technical problem, but as a state of symbolic "soul loss," opening a space where ritual, repair, and digital media overlap.',
+		artisticRelevance:
+			'The work repositions a traditional religious ritual within the everyday experience of technological breakdown. Through performance, video, and TouchDesigner-based interactive visuals, the project transforms the act of repairing a computer into a ritualized process of calling, guiding, and restoring. It reflects on the anxiety and helplessness that emerge when humans face technologies they cannot fully control.',
+		researchRelevance:
+			'Although this project is not part of my main PhD research proposal, it is closely connected to my broader practice in interactive media and technical ritual systems. It extends my long-term interest in how symbolic structures, procedural actions, visual systems, and interactive technologies can reorganize belief, uncertainty, and human-machine relations.',
+		credit: 'Created in collaboration with / under the guidance of Hanran Ma and Ji Yuxin.',
+		images: [],
+		video: 'https://player.vimeo.com/video/1191576425?badge=0&autopause=0&player_id=0&app_id=58479',
+		externalLink: 'https://vimeo.com/1191576425',
+		playLink: null,
+		displayMode: 'video',
+	},
+	{
+		id: 'the-sound-of-the-waves-still-remains',
+		title: 'The Sound of the Waves Still Remains',
+		chineseTitle: '涛声依旧',
+		alternativeTitle: null,
+		year: '2021',
+		type: 'video / multimedia urban study',
+		medium: 'video, field recording, urban image, spatial observation',
+		tools: ['Final Cut Pro', 'Ableton Live', 'Blender'],
+		keywords: [
+			'urban slice',
+			'Chongqing',
+			'situationism',
+			'vertical city',
+			'field recording',
+			'urban ecology',
+			'multimedia geography',
+		],
+		description:
+			"The Sound of the Waves Still Remains is a video-based multimedia project that examines a vertical section of Chongqing's urban environment. Drawing from Situationist theory and from the geological method of reading cross-sections, the work treats the city not as a flat map, but as a layered spatial volume.",
+		artisticRelevance:
+			'The project follows the coexistence of riverbanks, slopes, residential buildings, farmland, parks, infrastructure, and older historical traces within a single urban section. Rather than presenting the city as a continuous urban surface, it observes how different temporalities and spatial orders are compressed into one vertical rhythm.',
+		researchRelevance:
+			'This work is important to my broader practice because it shows an early method of treating place as a structured media system. Its attention to urban layers, spatial perception, and media-based reconstruction anticipates my later work with game engines, virtual environments, and modular spatial systems.',
+		images: [],
+		video: 'https://www.youtube.com/embed/wELL88EjBi0?si=mSm5jcA0AJEcKt34',
+		externalLink: 'https://youtu.be/wELL88EjBi0?si=mSm5jcA0AJEcKt34',
+		playLink: null,
+		displayMode: 'video',
+	},
+	{
 		id: 'wandering-in-taixu',
 		title: 'Wandering in Taixu',
 		chineseTitle: '云游太虚',
@@ -179,7 +193,7 @@ export const practiceProjects = [
 		year: '2022',
 		type: 'digital interactive work / game-engine environment',
 		medium: 'game engine, sound, virtual environment, video documentation',
-		tools: ['Unity', 'C#', 'Blender', 'sound design'],
+		tools: ['Unity', 'C#', 'Blender'],
 		keywords: [
 			'game engine',
 			'Chinese mysticism',
@@ -200,36 +214,6 @@ export const practiceProjects = [
 		video: 'https://player.vimeo.com/video/1191622278?badge=0&autopause=0&player_id=0&app_id=58479',
 		externalLink: 'https://vimeo.com/1191622278',
 		playLink: null,
-		displayMode: 'video',
-	},
-	{
-		id: 'you-n-me',
-		title: 'You n Me',
-		chineseTitle: null,
-		alternativeTitle: null,
-		year: '2021 / revised 2026',
-		type: 'web sculpture / browser-based interactive work',
-		medium: 'interactive webpage, real-time 3D graphics, generative text and image',
-		tools: ['p5.js', 'JavaScript', 'HTML/CSS'],
-		keywords: [
-			'web sculpture',
-			'networked identity',
-			'digital body',
-			'generative typography',
-			'browser-based art',
-			'reconstruction',
-		],
-		description:
-			'You n Me is a web sculpture first created in 2021. Originally developed with p5.js, the work brings fragmented bodies, shifting surfaces, and repeated language together in a browser-based space, where the encounter between “you” and “me” remains unstable and continually re-formed.',
-		artisticRelevance:
-			'The work treats the webpage as a sculptural environment rather than a neutral container. Figures, text, depth, and movement form a mutable digital object that can be entered through the screen and experienced through navigation.',
-		researchRelevance:
-			'The version shown here was revised and rebuilt in 2026 after the server that hosted the original work closed. Reconstructing it became part of the work itself, foregrounding the fragility of browser-based artworks and the dependence of digital memory on changing technical infrastructure.',
-		images: [],
-		video:
-			'https://player.vimeo.com/video/1225315117?badge=0&autopause=0&player_id=0&app_id=58479',
-		externalLink: 'https://vimeo.com/1225315117',
-		playLink: 'https://younme-ten.vercel.app',
 		displayMode: 'video',
 	},
 	{

@@ -2,6 +2,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import Layout from '../layouts/Layout.astro';
+import YouNMeProject from '../components/YouNMeProject.astro';
 import { practiceProjects } from '../data/practice.js';
 
 const publicPathExists = (path) => existsSync(join(process.cwd(), 'public', path));
@@ -48,12 +49,15 @@ const otherWorksNote =
 						class:list={[
 							'practice-panel',
 							project.id === 'other-works' && 'practice-panel--archive',
+							project.id === 'you-n-me' && 'practice-panel--essay',
 							index === 0 && 'is-active',
 						]}
 						data-practice-panel={project.id}
 						hidden={index !== 0}
 					>
-						{project.id === 'other-works' ? (
+						{project.id === 'you-n-me' ? (
+							<YouNMeProject project={project} index={index + 1} />
+						) : project.id === 'other-works' ? (
 							<div class="archive-wall">
 								<div class="student-wall" aria-label={`${project.title} image wall`}>
 									{project.images.map((src, imageIndex) =>
@@ -478,6 +482,10 @@ const otherWorksNote =
 		display: grid;
 		grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
 		gap: 34px;
+	}
+
+	.practice-panel--essay {
+		display: block;
 	}
 
 	.practice-panel--archive {

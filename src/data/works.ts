@@ -49,7 +49,7 @@ export const works: Work[] = [
 		title: 'On the Other Side of the Wall',
 		year: '2022 / 2026 published case study',
 		medium: 'Unity-based first-person experimental walking simulation',
-		tools: ['Unity', 'C#', 'modular scene control', 'dialogue system', 'dynamic media playback'],
+		tools: ['Unity', 'C#'],
 		keywords: [
 			'constrained traversal',
 			'dialogue-gated progression',
@@ -153,7 +153,7 @@ export const works: Work[] = [
 		title: 'SOMETHING BIG IS COMING',
 		year: '2025',
 		medium: 'Unity-based multi-screen meta-media environment',
-		tools: ['Unity', 'state management', 'multi-screen media', 'timed event logic', 'AI-generated video'],
+		tools: ['Unity'],
 		keywords: [
 			'state-machine narrative',
 			'audiovisual interface orchestration',
@@ -234,7 +234,7 @@ export const works: Work[] = [
 		title: 'Interactive Design for Deaf and Hard-of-Hearing Audiences',
 		year: '2024-2025',
 		medium: 'Audio-reactive Unity research prototype / WebGL experience',
-		tools: ['Unity 2022.3 LTS', 'C#', 'WebGL'],
+		tools: ['Unity 2022.3 LTS', 'C#'],
 		keywords: [
 			'cross-modal translation',
 			'audience agency',
@@ -321,7 +321,7 @@ export const works: Work[] = [
 		title: "Children's System: Eggs Eggs Eggs",
 		year: '2020',
 		medium: 'Participatory multimedia installation and six-month art education project',
-		tools: ['3D sculpting', '3D printing', 'Max/MSP', 'sensors', 'sound-reactive light', 'found objects'],
+		tools: ['3D printing', 'Max/MSP'],
 		keywords: [
 			'child-authored symbols',
 			'participatory ritual',

@@ -1,0 +1,134 @@
+---
+import essay from '../data/you-n-me.json';
+
+interface Props {
+	project: {
+		title: string;
+		year: string;
+		type: string;
+		medium: string;
+		tools: string[];
+		keywords: string[];
+		video: string;
+		externalLink: string;
+		playLink: string;
+	};
+	index: number;
+}
+const { project, index } = Astro.props;
+---
+
+<div class="you-n-me">
+	<header class="essay-header">
+		<div class="title-block">
+			<p class="notation">{String(index).padStart(2, '0')} / {project.year}</p>
+			<h2>{project.title}</h2>
+			<p class="classification">{project.type}</p>
+		</div>
+		<dl class="metadata">
+			<div><dt>Medium</dt><dd>{project.medium}</dd></div>
+			<div><dt>Tools</dt><dd>{project.tools.join(' / ')}</dd></div>
+			<div><dt>Keywords</dt><dd>{project.keywords.join(' / ')}</dd></div>
+			<div class="playable-row">
+				<dt>Interactive work</dt>
+				<dd><a href={project.playLink} target="_blank" rel="noopener noreferrer">Open playable version ↗</a></dd>
+			</div>
+		</dl>
+	</header>
+
+	<figure class="primary-media">
+		<iframe
+			src={project.video}
+			title="You n Me video documentation"
+			loading="lazy"
+			allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+			referrerpolicy="strict-origin-when-cross-origin"
+			allowfullscreen
+		/>
+		<figcaption>
+			<span class="notation">01 / Video documentation</span>
+			<a href={project.externalLink} target="_blank" rel="noopener noreferrer">Watch on Vimeo ↗</a>
+		</figcaption>
+	</figure>
+
+	<div class="essay-body">
+		{essay.map((section, sectionIndex) => (
+			<>
+				<section class="essay-section" aria-labelledby={`you-n-me-section-${sectionIndex}`}>
+					<div class="section-label">
+						<span class="notation">{String(sectionIndex + 1).padStart(2, '0')}</span>
+						<h3 id={`you-n-me-section-${sectionIndex}`}>{section.title}</h3>
+					</div>
+					<div class="prose">
+						{section.paragraphs.map((paragraph) =>
+							paragraph.startsWith('“') ? (
+								<blockquote>{paragraph}</blockquote>
+							) : (
+								<p class:list={{ emphasis: paragraph === 'Scale belongs to the network rather than to the individual viewer.' }}>{paragraph}</p>
+							)
+						)}
+					</div>
+				</section>
+
+			</>
+		))}
+		<footer class="essay-ending">
+			<p>You n Me is a sculpture that exists only while connection exists.</p>
+		</footer>
+	</div>
+</div>
+
+<style>
+	.you-n-me { min-width: 0; padding-top: 12px; }
+	.you-n-me p, .you-n-me h2, .you-n-me h3, .you-n-me dl, .you-n-me dd, .you-n-me figure { margin: 0; }
+	.notation, .metadata, .primary-media a {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		line-height: 1.6;
+		letter-spacing: 0.04em;
+	}
+	.notation { color: var(--muted-local); text-transform: uppercase; }
+	.essay-header { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; padding-bottom: 38px; }
+	.title-block { display: grid; align-content: start; gap: 20px; }
+	.title-block h2 { font-size: clamp(36px, 5vw, 60px); font-weight: 400; line-height: 1.05; letter-spacing: 0.055em; text-transform: uppercase; }
+	.classification { max-width: 40ch; font-size: 14px; line-height: 1.7; }
+	.metadata { display: grid; gap: 18px; color: var(--muted-local); }
+	.metadata div { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 16px; }
+	.metadata dt { text-transform: uppercase; color: var(--ink-local); }
+	.metadata dd { overflow-wrap: anywhere; }
+	.metadata .playable-row { align-items: center; padding: 8px 0; border-top: 1px solid var(--line-local); border-bottom: 1px solid var(--line-local); }
+	.primary-media { border-top: 2px solid var(--line-local); }
+	.primary-media iframe { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; background: var(--ink-local); }
+	.primary-media figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line-local); padding: 6px 0; }
+	.you-n-me a { display: inline-flex; align-items: center; min-height: 44px; color: var(--link-local); text-decoration-thickness: 1px; text-underline-offset: 5px; text-transform: uppercase; }
+	.you-n-me a:hover { color: var(--ink-local); }
+	.you-n-me a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+	.essay-body { padding-top: 72px; }
+	.essay-section { display: grid; grid-template-columns: minmax(160px, 0.65fr) minmax(0, 2fr); gap: 48px; padding-bottom: 76px; }
+	.section-label { max-width: 24ch; }
+	.section-label h3 { margin-top: 16px; font-size: 17px; font-weight: 400; line-height: 1.4; }
+	.prose { max-width: 65ch; font-size: 17px; line-height: 1.85; }
+	.prose p + p { margin-top: 20px; }
+	.prose blockquote { margin: 34px 0; font-size: clamp(21px, 2.2vw, 28px); line-height: 1.55; }
+	.prose p.emphasis { margin: 32px 0; font-size: 22px; line-height: 1.55; }
+	.essay-ending { display: grid; grid-template-columns: minmax(160px, 0.65fr) minmax(0, 2fr); gap: 48px; padding: 12px 0 38px; }
+	.essay-ending p { grid-column: 2; max-width: 34ch; font-size: clamp(25px, 3vw, 36px); line-height: 1.4; letter-spacing: 0.01em; }
+	@media (max-width: 900px) {
+		.essay-header { gap: 32px; }
+		.essay-section, .essay-ending { grid-template-columns: 150px minmax(0, 1fr); gap: 28px; }
+		.metadata div { grid-template-columns: 1fr; gap: 4px; }
+		.prose { font-size: 16px; }
+	}
+	@media (max-width: 620px) {
+		.essay-header, .essay-section, .essay-ending { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+		.essay-header { gap: 32px; padding-bottom: 28px; }
+		.metadata div { grid-template-columns: 64px minmax(0, 1fr); gap: 12px; }
+		.primary-media figcaption { flex-wrap: wrap; gap: 0 16px; }
+		.essay-body { padding-top: 44px; }
+		.essay-section { padding-bottom: 52px; }
+		.section-label { max-width: none; }
+		.section-label h3 { margin-top: 8px; font-size: 18px; }
+		.prose { line-height: 1.8; }
+		.essay-ending p { grid-column: 1; }
+	}
+</style>

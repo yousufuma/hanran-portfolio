@@ -29,26 +29,22 @@ const navigation = [
 	{
 		href: '/works',
 		title: 'works',
-		code: 'image systems',
-		meta: 'states / frames / visual engines',
+		glyphs: '▧ ── ◇ ── ▧',
 	},
 	{
 		href: '/research',
 		title: 'research',
-		code: 'technical grammar',
-		meta: 'papers / notes / methods',
+		glyphs: '∴ ── ∵ ── ∴',
 	},
 	{
 		href: '/practice',
 		title: 'practice',
-		code: 'practice & pedagogy',
-		meta: 'personal projects / collaborations / student Unity works',
+		glyphs: '┌─┐ + ┌─┐ → ┌─┬─┐',
 	},
 	{
 		href: soundCloudUrl,
 		title: 'sound',
-		code: 'frequencies',
-		meta: 'underground / rhythm / listening',
+		glyphs: '▁ ▂ ▄ ▆ ▃ ▁ ▃ ▆ ▄ ▂ ▁',
 		target: '_blank',
 		rel: 'noopener noreferrer',
 	},
@@ -317,8 +313,7 @@ const navigation = [
 						<a href={item.href} target={item.target} rel={item.rel} data-state="pending">
 							<span class="index-number">{String(index + 1).padStart(2, '0')}</span>
 							<span class="index-title">/{item.title}</span>
-							<span class="index-code">{item.code}</span>
-							<span class="index-meta">{item.meta}</span>
+							<span class="index-glyphs" aria-hidden="true">{item.glyphs}</span>
 						</a>
 					))
 				}
@@ -896,8 +891,7 @@ const navigation = [
 	.margin-note,
 	.section-mark,
 	.index-number,
-	.index-code,
-	.index-meta,
+	.index-glyphs,
 	.cv-download {
 		font-family: var(--font-mono);
 		font-size: 10px;
@@ -1309,7 +1303,7 @@ const navigation = [
 
 	.index-list a {
 		display: grid;
-		grid-template-columns: 48px minmax(96px, 0.34fr) minmax(150px, 0.48fr) minmax(0, 1fr);
+		grid-template-columns: 48px minmax(120px, 0.34fr) minmax(0, 1fr);
 		column-gap: 24px;
 		align-items: baseline;
 		min-height: 50px;
@@ -1317,10 +1311,6 @@ const navigation = [
 		border-bottom: 1px solid var(--line);
 		text-decoration: none;
 		color: var(--link);
-	}
-
-	.index-list a::after {
-		content: "";
 	}
 
 	.index-list a:hover,
@@ -1349,14 +1339,13 @@ const navigation = [
 		transform: scale(1.18);
 	}
 
-	.index-code {
-		font-size: 11px;
-		color: var(--link);
-	}
-
-	.index-meta {
-		font-size: 10px;
+	.index-glyphs {
+		min-width: 0;
 		color: var(--faint);
+		font-size: 14px;
+		line-height: 1.5;
+		letter-spacing: 0.16em;
+		white-space: nowrap;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
@@ -1496,8 +1485,7 @@ const navigation = [
 			min-height: 0;
 		}
 
-		.index-code,
-		.index-meta {
+		.index-glyphs {
 			grid-column: 2;
 		}
 
@@ -1609,10 +1597,15 @@ const navigation = [
 		}
 
 		.index-title,
-		.index-code,
-		.index-meta {
+		.index-glyphs {
 			min-width: 0;
 			overflow-wrap: anywhere;
+		}
+
+		.index-glyphs {
+			font-size: 12px;
+			letter-spacing: 0.1em;
+			white-space: normal;
 		}
 
 		.discipline-line {

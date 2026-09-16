@@ -1,0 +1,61 @@
+[
+  {
+    "title": "Introduction",
+    "paragraphs": [
+      "You n Me began in 2021, during a period when everyday social life was being rapidly reorganized through screens. Under the conditions of the COVID-19 pandemic, studying, meeting, speaking, and simply being present with others increasingly took place through webcams, browser windows, and video-conferencing interfaces.",
+      "These systems promised connection, yet they also established a very specific image of what online presence should look like: each person separated into a rectangular frame, identified by a name, and arranged alongside other isolated bodies on a screen.",
+      "You n Me begins from a simple question:",
+      "“What would happen if these separated images were no longer treated as individual windows, but as material for constructing a single shared object?”",
+      "The project approaches the webpage not as a container for displaying an artwork, but as the physical site of the work itself. Browser, camera, screen, code, network connection, and participating bodies together form a temporary digital sculpture."
+    ]
+  },
+  {
+    "title": "A Sculpture Made of Presence",
+    "paragraphs": [
+      "When a visitor enters the webpage and grants access to the camera, the live image is transformed from a conventional video frame into a material surface.",
+      "Rather than displaying the camera feed as a flat rectangle, the image is divided into thin ring-like strips that wrap around a three-dimensional form. The participant is therefore no longer represented by a stable portrait or avatar. Fragments of the body, the surrounding room, light, clothing, gestures, and movement become textures distributed across the surface of the sculpture.",
+      "As more people enter the work, more visual strips accumulate.",
+      "The sculpture becomes increasingly covered, layered, and visually dense. At the same time, its overall scale grows according to the number of participants currently present. When fewer people remain, the object becomes smaller and less materially saturated.",
+      "The underlying geometry itself remains unchanged.",
+      "What changes is its surface, density, scale, and state of visibility.",
+      "This distinction is important to the work. Individual participants do not redesign the sculpture or directly manipulate its structure. Instead, their temporary presence becomes a material condition through which the same object continuously acquires different appearances.",
+      "The work therefore exists somewhere between a fixed sculpture and an unstable social image."
+    ]
+  },
+  {
+    "title": "From Individual Windows to a Collective Surface",
+    "paragraphs": [
+      "Video-conferencing software organizes people through separation.",
+      "You n Me reverses this logic.",
+      "Instead of preserving each participant as an independent image, the work fragments these images and allows them to coexist on the surface of one object. The distinction between “you” and “me” remains visible, but becomes increasingly difficult to locate spatially.",
+      "One person's image may become a narrow band passing through another person's image. A face may appear only as color. A room may become texture. Movement becomes deformation of an image rather than movement of an identifiable body.",
+      "The resulting sculpture is not a representation of any single participant.",
+      "It is produced by the temporary coexistence of everyone currently connected to it.",
+      "In this sense, You n Me approaches the idea of social sculpture through network infrastructure. Its form is neither entirely authored by the artist nor freely controlled by its audience. It emerges from the temporary assembly of users, cameras, devices, code, and communication systems.",
+      "The work only becomes complete through participation, yet no participant can determine its final appearance."
+    ]
+  },
+  {
+    "title": "Distance Without Zoom",
+    "paragraphs": [
+      "Visitors can rotate the sculpture and observe it from different directions, but they cannot manually change its scale.",
+      "Scale belongs to the network rather than to the individual viewer.",
+      "The size of the sculpture is determined by collective presence: the more people who enter, the larger it becomes.",
+      "This creates a deliberate imbalance between individual and collective control. A visitor may choose how to look at the object, but cannot decide how large the object should be. That property is produced only by the presence of others.",
+      "The sculpture therefore behaves less like a conventional 3D model and more like a temporary social body whose visual weight depends on how many people currently sustain it."
+    ]
+  },
+  {
+    "title": "Reconstruction, 2026",
+    "paragraphs": [
+      "The original version of You n Me was created in 2021. Years later, the server and technical environment that supported the work were no longer available, making the original online version inaccessible.",
+      "In 2026, the project was reconstructed.",
+      "Rather than treating this simply as technical maintenance, the reconstruction became a second layer of the work.",
+      "Browser-based artworks are often described as immaterial, yet their survival depends on highly material infrastructures: servers, hosting services, browser standards, APIs, devices, permissions, software libraries, and continuously changing technical protocols.",
+      "When these systems disappear, the artwork can disappear with them.",
+      "The reconstructed version retains the central logic of the original project while acknowledging this instability. You n Me is therefore not preserved as a fixed digital object. It persists through repeated execution, migration, adaptation, and reconstruction.",
+      "Its material is not only image and code.",
+      "Its material is also the technical infrastructure required for two people to appear to one another through a network."
+    ]
+  }
+]
